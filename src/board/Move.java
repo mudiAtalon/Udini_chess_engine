@@ -6,24 +6,24 @@ public class Move {
     public final boolean isCastleShort, isCastleLong;
     public final Promotion promotedTo;
 
-    public Move(int[] from, int[] to){
-        this(from[0], from[1], to[0], to[1]);
+    public Move(Square from, Square to){
+        this(from.rank, from.file, to.rank, to.file);
     }
 
-    public Move(int[] from, int[] to, boolean isPawnJump){
-        this(from[0], from[1], to[0], to[1], Promotion.NO_PROMOTION, isPawnJump, false, false, false);
+    public Move(Square from, Square to, boolean isPawnJump){
+        this(from.rank, from.file, to.rank, to. file, Promotion.NO_PROMOTION, isPawnJump, false, false, false);
     }
 
-    public Move(int[] from, int[] to, boolean isPawnJump, boolean isEnPassant){
-        this(from[0], from[1], to[0], to[1], Promotion.NO_PROMOTION, isPawnJump, isEnPassant, false, false);
+    public Move(Square from, Square to, boolean isPawnJump, boolean isEnPassant){
+        this(from.rank, from.file, to.rank, to. file, Promotion.NO_PROMOTION, isPawnJump, isEnPassant, false, false);
     }
 
-    public Move(int[] from, int[] to, boolean isPawnJump, boolean isEnPassant, boolean isCastleShort, boolean isCastleLong){
-        this(from[0], from[1], to[0], to[1], Promotion.NO_PROMOTION, isPawnJump, isEnPassant, isCastleShort, isCastleLong);
+    public Move(Square from, Square to, boolean isPawnJump, boolean isEnPassant, boolean isCastleShort, boolean isCastleLong){
+        this(from.rank, from.file, to.rank, to. file, Promotion.NO_PROMOTION, isPawnJump, isEnPassant, isCastleShort, isCastleLong);
     }
 
-    public Move(int[] from, int[] to, Promotion promotedTo){
-        this(from[0], from[1], to[0], to[1], promotedTo, false, false, false, false);
+    public Move(Square from, Square to, Promotion promotedTo){
+        this(from.rank, from.file, to.rank, to.file, promotedTo, false, false, false, false);
     }
 
     public Move(int rankFrom, int fileFrom, int rankTo, int fileTo) {
@@ -46,16 +46,16 @@ public class Move {
         this.promotedTo = promotedTo;
     }
 
-    public int[] getFrom(){
-        return new int[]{rankFrom, fileFrom};
+    public Square getFrom(){
+        return new Square(rankFrom, fileFrom);
     }
 
-    public int[] getTo(){
-        return new int[]{rankTo, fileTo};
+    public Square getTo(){
+        return new Square(rankTo, fileTo);
     }
 
-    public boolean isTo(int[] to){
-        return to[0] == rankTo && to[1] == fileTo;
+    public boolean isTo(Square to){
+        return to.rank == rankTo && to.file == fileTo;
     }
 
     public enum Promotion {

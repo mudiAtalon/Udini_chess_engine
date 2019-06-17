@@ -1,22 +1,23 @@
 package board.pieces;
 
-import board.Move;
+import board.Board;
+import board.Square;
 
 import java.util.*;
 
 public class Knight extends Piece {
 
-    public Knight(boolean isWhite, int[] square) {
+    public Knight(boolean isWhite, Square square) {
         super(isWhite, square, isWhite ? '\u2658' : '\u265e');
     }
 
     public Knight(boolean isWhite, int rank, int file) {
-        this(isWhite, new int[]{rank, file});
+        this(isWhite, new Square(rank, file));
     }
 
     @Override
-    public List<Move> moves() {
-        List<Move> ret = new ArrayList<>();
+    protected List<Square> _sqrControl(Board b) {
+        List<Square> ret = new ArrayList<>();
         addStep(ret, 2, 1);
         addStep(ret, -2, 1);
         addStep(ret, 2, -1);

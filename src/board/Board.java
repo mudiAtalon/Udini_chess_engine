@@ -3,6 +3,7 @@ package board;
 import board.pieces.Piece;
 
 import java.util.*;
+
 import board.pieces.*;
 
 public class Board {
@@ -19,17 +20,19 @@ public class Board {
         instance = new Board();
     }
 
-    private static final int[] WHITE_SHORT_ROOK_START_SQR = new int[]{7, 7},
-            WHITE_LONG_ROOK_START_SQR = new int[]{7, 0},
-            WHITE_KING_START_SQR = new int[]{7, 4},
-            BLACK_SHORT_ROOK_START_SQR = new int[]{0, 7},
-            BLACK_LONG_ROOK_START_SQR = new int[]{0, 0},
-            BLACK_KING_START_SQR = new int[]{0, 4};
+    private static final Square WHITE_SHORT_ROOK_START_SQR = new Square(7, 7),
+            WHITE_LONG_ROOK_START_SQR = new Square(7, 0),
+            WHITE_KING_START_SQR = new Square(7, 4),
+            BLACK_SHORT_ROOK_START_SQR = new Square(0, 7),
+            BLACK_LONG_ROOK_START_SQR = new Square(0, 0),
+            BLACK_KING_START_SQR = new Square(0, 4);
 
     private final Piece[][] board = new Piece[8][8];
+    private final List<Piece>[][] whiteSqrControl = new List[8][8],
+            blackSqrControl = new List[8][8];//I hate java it should have generic arrays
     private EmptyPiece EP;
     private boolean isWhiteTurn;
-    private int[] enPassant;
+    private Square enPassant;
     private boolean whiteShortCastleRight,
             whiteLongCastleRight,
             blackShortCastleRight,
@@ -38,14 +41,14 @@ public class Board {
 
     private List<Move> allMoves;
 
-    private Result result;
+//    private Result result;
 
-    private enum Result{
-        WHITE_WINS,
-        BLACK_WINS,
-        DRAW,
-        PLAYING
-    }
+//    private enum Result{
+//        WHITE_WINS,
+//        BLACK_WINS,
+//        DRAW,
+//        PLAYING
+//    }
 
     private Board() {
         EP = EmptyPiece.getInstance();
@@ -88,25 +91,45 @@ public class Board {
         board[7][6] = new Knight(true, 7, 6);
         board[7][7] = new Rook(true, 7, 7);
 
-        result = Result.PLAYING;
+        for (int rank = 0; rank < 8; rank++)
+            for (int file = 0; file < 8; file++) {
+                whiteSqrControl[rank][file] = new ArrayList<>();
+                blackSqrControl[rank][file] = new ArrayList<>();
+            }
+        for (Piece[] file : board)
+            for (Piece piece : file) {
+                if (piece.isEmpty())
+                    continue;
+
+                if (piece.isWhite())
+                    for (Square to : piece.sqrControl(this))
+                        whiteSqrControl[to.rank][to.file].add(piece);
+                else
+                    for (Square to : piece.sqrControl(this))
+                        blackSqrControl[to.rank][to.file].add(piece);
+            }
+
+//        result = Result.PLAYING;
     }
 
-    public int[] getEnPassant(){
-        if(enPassant == null) return null;
-        return Arrays.copyOf(enPassant, 2);
+    public Square getEnPassant() {
+        if (enPassant == null) return null;
+        return enPassant.copy();
     }
 
     private boolean canCastle(boolean isWhite, boolean isShort) {
-        int[] scanSqr = Arrays.copyOf(isWhite ? WHITE_KING_START_SQR : BLACK_KING_START_SQR, 2);
+        Square scanSqr = new Square(isWhite ? WHITE_KING_START_SQR : BLACK_KING_START_SQR);
         int step = isShort ? 1 : -1;
-        for (scanSqr[1] += step; scanSqr[1] != (isShort ? 7 : 0); scanSqr[1] += step) {
+        for (scanSqr = new Square(scanSqr.rank, scanSqr.file + step);
+             scanSqr.file != (isShort ? 7 : 0);
+             scanSqr = new Square(scanSqr.rank, scanSqr.file + step)) {
             if (!get(scanSqr).isEmpty())
                 return false;
         }
         return true;
     }
 
-    public List<Move> castleMoves(){
+    public List<Move> castleMoves() {
         if (isWhiteTurn) {
             return castleMovesWhite();
         } else {
@@ -114,15 +137,15 @@ public class Board {
         }
     }
 
-    private List<Move> castleMovesWhite(){
+    private List<Move> castleMovesWhite() {
         List<Move> ret = new ArrayList<>();
-        int[] from = new int[]{7, 4};
+        Square from = new Square(7, 4);
         if (whiteShortCastleRight && canCastle(true, true)) {
-            int[] to = new int[]{7, 6};
+            Square to = new Square(7, 6);
             ret.add(new Move(from, to, false, false, true, false));
         }
         if (whiteLongCastleRight && canCastle(true, false)) {
-            int[] to = new int[]{7, 2};
+            Square to = new Square(7, 2);
             ret.add(new Move(from, to, false, false, false, true));
         }
         return ret;
@@ -130,25 +153,25 @@ public class Board {
 
     private List<Move> castleMovesBlack() {
         List<Move> ret = new ArrayList<>();
-        int[] from = new int[]{0, 4};
+        Square from = new Square(0, 4);
         if (blackShortCastleRight && canCastle(false, true)) {
-            int[] to = new int[]{0, 6};
+            Square to = new Square(0, 6);
             ret.add(new Move(from, to, false, false, true, false));
         }
         if (blackLongCastleRight && canCastle(false, false)) {
-            int[] to = new int[]{0, 2};
+            Square to = new Square(0, 2);
             ret.add(new Move(from, to, false, false, false, true));
         }
         return ret;
     }
 
     public void move(int rankFrom, int fileFrom, int rankTo, int fileTo) {
-        move(new int[]{rankFrom, fileFrom}, new int[]{rankTo, fileTo});
+        move(new Square(rankFrom, fileFrom), new Square(rankTo, fileTo));
     }
 
-    public void move(Move m){
-        if(result != Result.PLAYING)
-            throw new IllegalArgumentException("the game is over. go home!");
+    public void move(Move m) {
+//        if(result != Result.PLAYING)
+//            throw new IllegalArgumentException("the game is over. go home!");
         if (!isOfColor(isWhiteTurn, get(m.getFrom())))
             throw new IllegalArgumentException("wait for your turn");
         System.out.println("start");
@@ -161,13 +184,13 @@ public class Board {
                 return;
             }
         }
-        throw new IllegalArgumentException("no legal move from " +
-                Arrays.toString(m.getFrom()) + " to " + Arrays.toString(m.getTo()));
+        throw new IllegalArgumentException("no move from " +
+                m.getFrom() + " to " + m.getTo());
     }
 
-    public void move(int[] from, int[] to) {
-        if(result != Result.PLAYING)
-            throw new IllegalArgumentException("the game is over. go home!");
+    public void move(Square from, Square to) {
+//        if(result != Result.PLAYING)
+//            throw new IllegalArgumentException("the game is over. go home!");
         if (!isOfColor(isWhiteTurn, get(from)))
             throw new IllegalArgumentException("wait for your turn");
         System.out.println("start");
@@ -180,37 +203,48 @@ public class Board {
                 return;
             }
         }
-        throw new IllegalArgumentException("no legal move from " + Arrays.toString(from) + " to " + Arrays.toString(to));
+        throw new IllegalArgumentException("no legal move from " + from + " to " + to);
     }
 
     private void _move(Move move) {
-        int[] from = move.getFrom(), to = move.getTo();
+        Square from = move.getFrom(), to = move.getTo();
+
+        List<Piece> changedControllingPieces = new ArrayList<>();
+        changedControllingPieces.add(get(from));
+
         _rawMove(from, to);
+
+        changedControllingPieces.addAll(getControllingPieces(from));
+        changedControllingPieces.addAll(getControllingPieces(to));
+
         enPassant = null;
         if (move.isPawnJump) {
-            enPassant = new int[]{to[0] + (isWhiteTurn ? 1 : -1), to[1]};
+            enPassant = new Square(to.rank + (isWhiteTurn ? 1 : -1), to.file);
         }
         if (move.isEnPassant) {
-            int jumpedPawnRank = to[0] + (isWhiteTurn ? 1 : -1);
-            board[jumpedPawnRank][to[1]] = EP;
+            int jumpedPawnRank = to.rank + (isWhiteTurn ? 1 : -1);
+            changedControllingPieces.add(get(jumpedPawnRank, to.file));
+            board[jumpedPawnRank][to.file] = EP;
         }
         if (move.isCastleShort) {
             from = isWhiteTurn ? WHITE_SHORT_ROOK_START_SQR : BLACK_SHORT_ROOK_START_SQR;
-            to = new int[]{from[0], from[1] - 2};
+            to = new Square(from.rank, from.file - 2);
+            changedControllingPieces.add(get(from));
             _rawMove(from, to);
         }
         if (move.isCastleLong) {
             from = isWhiteTurn ? WHITE_LONG_ROOK_START_SQR : BLACK_LONG_ROOK_START_SQR;
-            to = new int[]{from[0], from[1] + 3};
+            to = new Square(from.rank, from.file + 3);
+            changedControllingPieces.add(get(from));
             _rawMove(from, to);
         }
         updateWhiteCastleRights(move);
         updateBlackCastleRights(move);
 
-        if(get(move.getTo()) instanceof Pawn){
+        if (get(move.getTo()) instanceof Pawn) {
             Pawn pawn = (Pawn) get(move.getTo());
-            if(pawn.isPromotionRank(move.rankTo))
-                switch(move.promotedTo){
+            if (pawn.isPromotionRank(move.rankTo))
+                switch (move.promotedTo) {
                     case QUEEN:
                         board[move.rankTo][move.fileTo] = new Queen(pawn.isWhite(), move.rankTo, move.fileTo);
                         break;
@@ -229,71 +263,102 @@ public class Board {
                 }
         }
 
+        for(Piece piece : changedControllingPieces)
+            removePieceSqrControl(piece);
+        for(Piece piece : changedControllingPieces)
+            addPieceSqrControl(piece);
+
         isWhiteTurn = !isWhiteTurn;
 
-        setAllMoves(isWhiteTurn);
-        if(isInCheck(!isWhiteTurn)) throw new IllegalArgumentException("can't walk into check");
+//        setAllMoves(isWhiteTurn);
+//        if(isInCheck(!isWhiteTurn)) throw new IllegalArgumentException("can't walk into check");
 
-        result = getUpdatedResult(!isWhiteTurn);
-
-        if(result != Result.PLAYING)
-            System.out.println(result);
+//        result = getUpdatedResult(!isWhiteTurn);
+//
+//        if(result != Result.PLAYING)
+//            System.out.println(result);
     }
 
-    private void updateWhiteCastleRights(Move move){
-        if (Arrays.equals(move.getFrom(), WHITE_KING_START_SQR)) {
+    private void updateWhiteCastleRights(Move move) {
+        if (move.getFrom().equals(WHITE_KING_START_SQR)) {
             whiteShortCastleRight = false;
             whiteLongCastleRight = false;
         }
-        if (Arrays.equals(move.getFrom(), WHITE_SHORT_ROOK_START_SQR))
+        if (move.getFrom().equals(WHITE_SHORT_ROOK_START_SQR))
             whiteShortCastleRight = false;
-        if (Arrays.equals(move.getFrom(), WHITE_LONG_ROOK_START_SQR))
+        if (move.getFrom().equals(WHITE_LONG_ROOK_START_SQR))
             whiteLongCastleRight = false;
     }
 
-    private void updateBlackCastleRights(Move move){
-        if (Arrays.equals(move.getFrom(), BLACK_KING_START_SQR)) {
+    private void updateBlackCastleRights(Move move) {
+        if (move.getFrom().equals(BLACK_KING_START_SQR)) {
             blackShortCastleRight = false;
             blackLongCastleRight = false;
         }
-        if (Arrays.equals(move.getFrom(), BLACK_SHORT_ROOK_START_SQR))
+        if (move.getFrom().equals(BLACK_SHORT_ROOK_START_SQR))
             blackShortCastleRight = false;
-        if (Arrays.equals(move.getFrom(), BLACK_LONG_ROOK_START_SQR))
+        if (move.getFrom().equals(BLACK_LONG_ROOK_START_SQR))
             blackLongCastleRight = false;
     }
 
-    private boolean isInCheck(boolean isWhite){
+    private boolean isInCheck(boolean isWhite) {
         Piece myKing = isWhite ? whiteKing : blackKing;
-        for(Move nextMove :getAllMoves()){
-            if(Arrays.equals(nextMove.getTo(), myKing.getSquare()))
+        for (Move nextMove : getAllMoves()) {
+            if (nextMove.getTo().equals(myKing.getSquare()))
                 return true;
         }
         return false;
     }
 
-    private Result getUpdatedResult(boolean whitePlayedLast){
-        if(getAllMoves().size() > 0)
-            return Result.PLAYING;
-        setAllMoves(whitePlayedLast);
-        if(!isInCheck(!whitePlayedLast))
-            return Result.DRAW;
-        if(whitePlayedLast)
-            return Result.WHITE_WINS;
-        else
-            return Result.BLACK_WINS;
+//    private Result getUpdatedResult(boolean whitePlayedLast){
+//        if(getAllMoves().size() > 0)
+//            return Result.PLAYING;
+//        setAllMoves(whitePlayedLast);
+//        if(!isInCheck(!whitePlayedLast))
+//            return Result.DRAW;
+//        if(whitePlayedLast)
+//            return Result.WHITE_WINS;
+//        else
+//            return Result.BLACK_WINS;
+//    }
+
+    private List<Piece> getControllingPieces(Square sqr){
+        List<Piece> ret = new ArrayList<>(whiteSqrControl[sqr.rank][sqr.file]);
+        ret.addAll(blackSqrControl[sqr.rank][sqr.file]);
+        return ret;
     }
 
-    private void _rawMove(int[] from, int[] to) {
+    private void addPieceSqrControl(Piece piece){
+        if (piece.isEmpty()) return;
+        List<Square> newControlledSqrs = piece.sqrControl();
+        List[][] squareControlBoard = piece.isWhite() ? whiteSqrControl : blackSqrControl;
+        for(Square sqr : newControlledSqrs)
+            squareControlBoard[sqr.rank][sqr.file].add(sqr);
+    }
+
+    private void removePieceSqrControl(Piece piece) {
+        if (piece.isEmpty()) return;
+        List<Square> oldControlledSqrs = piece.getControlledSquares();
+        List[][] squareControlBoard = piece.isWhite() ? whiteSqrControl : blackSqrControl;
+        for (Square sqr : oldControlledSqrs)
+            squareControlBoard[sqr.rank][sqr.file].remove(sqr);
+    }
+
+    private void _rawMove(Square from, Square to) {
         get(from).setSquare(to);
-        board[to[0]][to[1]] = get(from);
-        board[from[0]][from[1]] = EP;
+        board[to.rank][to.file] = get(from);
+        board[from.rank][from.file] = EP;
     }
 
-    public Piece get(int[] square) {
-        return board[square[0]][square[1]];
+    public Piece get(Square square) {
+        return board[square.rank][square.file];
     }
 
-    public void setAllMoves(boolean forWhite){
+    public Piece get(int rank, int file){
+        return board[rank][file];
+    }
+
+    public void setAllMoves(boolean forWhite) {
         List<Move> moves = new ArrayList<>();
         for (Piece[] rank : board)
             for (Piece piece : rank)
@@ -306,12 +371,23 @@ public class Board {
         return allMoves;
     }
 
+//    public boolean isLegal(Move move){
+//
+//    }
+
+//    public List<Move> getAllLegalMoves(){
+//        List<Move> ret = new ArrayList<>();
+//        for(Move move : allMoves){
+//
+//        }
+//    }
+
     public static boolean isOnBoard(int rank, int file) {
         return file >= 0 && file < 8 && rank >= 0 && rank < 8;
     }
 
-    public static boolean isOnBoard(int[] move) {
-        return isOnBoard(move[0], move[1]);
+    public static boolean isOnBoard(Square move) {
+        return isOnBoard(move.rank, move.file);
     }
 
     public static boolean isOfColor(boolean isWhite, Piece p) {
@@ -338,6 +414,6 @@ public class Board {
         b.move(6, 6, 4, 6);
         b.move(0, 3, 4, 7);
         System.out.println(b);
-        b.move(7,0,0, 0);
+        b.move(7, 0, 0, 0);
     }
 }

@@ -1,26 +1,27 @@
 package board.pieces;
 
-import board.Move;
+import board.Board;
+import board.Square;
 
 import java.util.*;
 
 public class Rook extends Piece {
 
-    public Rook(boolean isWhite, int[] square) {
+    public Rook(boolean isWhite, Square square) {
         super(isWhite, square, isWhite ? '\u2656' : '\u265c');
     }
 
     public Rook(boolean isWhite, int rank, int file) {
-        this(isWhite, new int[]{rank, file});
+        this(isWhite, new Square(rank, file));
     }
 
     @Override
-    public List<Move> moves() {
-        List<Move> ret = new ArrayList<>();
-        addRay(ret, 1, 0);
-        addRay(ret, -1, 0);
-        addRay(ret, 0, 1);
-        addRay(ret, 0, -1);
+    protected List<Square> _sqrControl(Board board) {
+        List<Square> ret = new ArrayList<>();
+        addRay(ret, board, 1, 0);
+        addRay(ret, board, -1, 0);
+        addRay(ret, board, 0, 1);
+        addRay(ret, board, 0, -1);
         return ret;
     }
 }

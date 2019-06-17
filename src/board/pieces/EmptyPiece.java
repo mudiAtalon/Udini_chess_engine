@@ -1,6 +1,9 @@
 package board.pieces;
 
+import board.Board;
 import board.Move;
+import board.Square;
+
 import java.util.*;
 
 public class EmptyPiece extends Piece {
@@ -17,6 +20,11 @@ public class EmptyPiece extends Piece {
 
     @Override
     public List<Move> moves() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    protected List<Square> _sqrControl(Board b) {
         return new ArrayList<>();
     }
 

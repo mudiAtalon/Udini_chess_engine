@@ -2,22 +2,26 @@ package board.pieces;
 
 import board.Board;
 import board.Move;
+import board.Square;
 
-import java.util.List;
+import java.util.*;
 
 public abstract class Piece {
     protected final boolean isWhite;
-    protected int[] square;
+    protected Square square;
     private final char c;
 
-    public Piece(boolean isWhite, int[] square, char c) {
+    protected List<Square> controlledSquares;
+
+    public Piece(boolean isWhite, Square square, char c) {
         this.isWhite = isWhite;
         this.square = square;
         this.c = c;
+        this.controlledSquares = new ArrayList<>();
     }
 
     public Piece(boolean isWhite, int rank, int file, char c) {
-        this(isWhite, new int[]{rank, file}, c);
+        this(isWhite, new Square(rank, file), c);
     }
 
     public boolean isWhite() {
@@ -40,30 +44,51 @@ public abstract class Piece {
         return isWhite ? p.isBlack() : p.isWhite();
     }
 
-    public int[] getSquare(){
+    public Square getSquare() {
         return square;
     }
 
-    public void setSquare(int[] square){
+    public void setSquare(Square square) {
         this.square = square;
     }
 
-    public abstract List<Move> moves();
-
-    protected void addRay(List<Move> moves, int rankStep, int fileStep) {
-        for (int[] to = new int[]{square[0] + rankStep, square[1] + fileStep};
-             Board.isOnBoard(to); to = new int[]{to[0] + rankStep, to[1] + fileStep}) {
+    public List<Move> moves() {
+        List<Square> controledSqrs = sqrControl();
+        List<Move> ret = new ArrayList<>();
+        for (Square to : controledSqrs)
             if (!isAlly(Board.getInstance().get(to)))
-                moves.add(new Move(square, to));
-            if (!Board.getInstance().get(to).isEmpty())
+                ret.add(new Move(square, to));
+        return ret;
+    }
+
+    public List<Square> sqrControl(){
+        return sqrControl(Board.getInstance());
+    }
+
+    public List<Square> sqrControl(Board board){
+        controlledSquares = _sqrControl(board);
+        return new ArrayList<>(controlledSquares);
+    }
+
+    protected abstract List<Square> _sqrControl(Board board);
+
+    public List<Square> getControlledSquares(){
+        return controlledSquares;
+    }
+
+    protected void addRay(List<Square> moves, Board board, int rankStep, int fileStep) {
+        for (Square to = new Square(square.rank + rankStep, square.file + fileStep);
+             Board.isOnBoard(to); to = new Square(to.rank + rankStep, to.file + fileStep)) {
+            moves.add(to);
+            if (!board.get(to).isEmpty())
                 return;
         }
     }
 
-    protected void addStep(List<Move> moves, int rankStep, int fileStep) {
-        int[] to = new int[]{square[0] + rankStep, square[1] + fileStep};
-        if (Board.isOnBoard(to) && !isAlly(Board.getInstance().get(to)))
-            moves.add(new Move(square, to));
+    protected void addStep(List<Square> moves, int rankStep, int fileStep) {
+        Square to = new Square(square.rank + rankStep, square.file + fileStep);
+        if (Board.isOnBoard(to))
+            moves.add(to);
     }
 
     @Override
