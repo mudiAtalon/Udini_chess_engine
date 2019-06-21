@@ -1,38 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f364fdf4-ae4d-4d9e-af5b-143c2cdf202f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/board/Square.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/chess engine/bitBoard/BitBoard.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/chess engine/bitBoard/Move.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/chess engine/bitBoard/MovesGenerator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/chess engine/board/Board$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/chess engine/board/Board$Result.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/chess engine/board/Board.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/chess engine/board/Move$Promotion.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/chess engine/board/Move.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/chess engine/board/pieces/Bishop.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/chess engine/board/pieces/EmptyPiece.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/chess engine/board/pieces/King.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/chess engine/board/pieces/Knight.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/chess engine/board/pieces/Pawn.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/chess engine/board/pieces/Piece.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/chess engine/board/pieces/Queen.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/chess engine/board/pieces/Rook.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/Board.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/Move.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/Move.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/pieces/Bishop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/pieces/Bishop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/pieces/EmptyPiece.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/pieces/EmptyPiece.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/pieces/King.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/pieces/King.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/pieces/Knight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/pieces/Knight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/pieces/Pawn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/pieces/Pawn.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/pieces/Piece.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/pieces/Piece.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/pieces/Queen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/pieces/Queen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/pieces/Rook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/pieces/Rook.java" afterDir="false" />
-    </list>
+    <list default="true" id="f364fdf4-ae4d-4d9e-af5b-143c2cdf202f" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -85,7 +54,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/board/Board.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
+            <state relative-caret-position="60">
               <caret line="268" column="38" lean-forward="true" selection-start-line="268" selection-start-column="38" selection-end-line="268" selection-end-column="38" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -106,13 +75,13 @@
                 <element signature="e#10987#11203#0" />
                 <element signature="e#11260#11477#0" />
                 <element signature="e#11209#11718#0" />
-                <element signature="e#12614#12615#0" expanded="true" />
+                <element signature="e#12590#12591#0" expanded="true" />
                 <element signature="e#12552#12553#0" expanded="true" />
                 <element signature="e#12592#12593#0" expanded="true" />
-                <element signature="e#13067#13068#0" expanded="true" />
-                <element signature="e#13399#13400#0" expanded="true" />
-                <element signature="e#13505#13506#0" expanded="true" />
-                <element signature="e#13628#13629#0" expanded="true" />
+                <element signature="e#13039#13040#0" expanded="true" />
+                <element signature="e#13371#13372#0" expanded="true" />
+                <element signature="e#13477#13478#0" expanded="true" />
+                <element signature="e#13600#13601#0" expanded="true" />
                 <marker date="1560779741950" expanded="false" signature="13044:13093" ph="..." />
               </folding>
             </state>
@@ -338,12 +307,12 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.23567921" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.23567921" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3207856" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Terminal" order="7" weight="0.3289689" />
+      <window_info anchor="bottom" id="Terminal" order="7" weight="0.22094926" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Messages" order="10" weight="0.3289689" />
@@ -546,7 +515,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/board/Board.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
+        <state relative-caret-position="60">
           <caret line="268" column="38" lean-forward="true" selection-start-line="268" selection-start-column="38" selection-end-line="268" selection-end-column="38" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -567,13 +536,13 @@
             <element signature="e#10987#11203#0" />
             <element signature="e#11260#11477#0" />
             <element signature="e#11209#11718#0" />
-            <element signature="e#12614#12615#0" expanded="true" />
+            <element signature="e#12590#12591#0" expanded="true" />
             <element signature="e#12552#12553#0" expanded="true" />
             <element signature="e#12592#12593#0" expanded="true" />
-            <element signature="e#13067#13068#0" expanded="true" />
-            <element signature="e#13399#13400#0" expanded="true" />
-            <element signature="e#13505#13506#0" expanded="true" />
-            <element signature="e#13628#13629#0" expanded="true" />
+            <element signature="e#13039#13040#0" expanded="true" />
+            <element signature="e#13371#13372#0" expanded="true" />
+            <element signature="e#13477#13478#0" expanded="true" />
+            <element signature="e#13600#13601#0" expanded="true" />
             <marker date="1560779741950" expanded="false" signature="13044:13093" ph="..." />
           </folding>
         </state>
