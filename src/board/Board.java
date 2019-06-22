@@ -209,7 +209,6 @@ public class Board {
     private void _move(Move move) {
         Square from = move.getFrom(), to = move.getTo();
 
-        List<Piece> changedControllingPieces = new ArrayList<>();
         changedControllingPieces.add(get(from));
 
         _rawMove(from, to);
@@ -229,13 +228,11 @@ public class Board {
         if (move.isCastleShort) {
             from = isWhiteTurn ? WHITE_SHORT_ROOK_START_SQR : BLACK_SHORT_ROOK_START_SQR;
             to = new Square(from.rank, from.file - 2);
-            changedControllingPieces.add(get(from));
             _rawMove(from, to);
         }
         if (move.isCastleLong) {
             from = isWhiteTurn ? WHITE_LONG_ROOK_START_SQR : BLACK_LONG_ROOK_START_SQR;
             to = new Square(from.rank, from.file + 3);
-            changedControllingPieces.add(get(from));
             _rawMove(from, to);
         }
         updateWhiteCastleRights(move);
@@ -262,11 +259,6 @@ public class Board {
                         throw new IllegalArgumentException("must promote to something");
                 }
         }
-
-        for(Piece piece : changedControllingPieces)
-            removePieceSqrControl(piece);
-        for(Piece piece : changedControllingPieces)
-            addPieceSqrControl(piece);
 
         isWhiteTurn = !isWhiteTurn;
 
@@ -328,12 +320,23 @@ public class Board {
         return ret;
     }
 
+    private List<Piece> getChangedControllingPieces(Move move){
+        List<Piece> changedControllingPieces = new ArrayList<>();
+        changedControllingPieces.add(get(move.getFrom()));
+        changedControllingPieces.add(get(move.getTo()));
+        changedControllingPieces.addAll(getControllingPieces(move.getFrom()));
+        changedControllingPieces.addAll(getControllingPieces(move.getTo()));
+        if(move.promotedTo!= Move.Promotion.NO_PROMOTION)
+            changedControllingPieces.add(get(move.getTo()));
+        return changedControllingPieces;
+    }
+
     private void addPieceSqrControl(Piece piece){
         if (piece.isEmpty()) return;
         List<Square> newControlledSqrs = piece.sqrControl();
         List[][] squareControlBoard = piece.isWhite() ? whiteSqrControl : blackSqrControl;
         for(Square sqr : newControlledSqrs)
-            squareControlBoard[sqr.rank][sqr.file].add(sqr);
+            squareControlBoard[sqr.rank][sqr.file].add(piece);
     }
 
     private void removePieceSqrControl(Piece piece) {
@@ -341,7 +344,15 @@ public class Board {
         List<Square> oldControlledSqrs = piece.getControlledSquares();
         List[][] squareControlBoard = piece.isWhite() ? whiteSqrControl : blackSqrControl;
         for (Square sqr : oldControlledSqrs)
-            squareControlBoard[sqr.rank][sqr.file].remove(sqr);
+            squareControlBoard[sqr.rank][sqr.file].remove(piece);
+    }
+
+    private void updateSqrControl(List<Piece> changedControllingPieces){
+
+        for(Piece piece : changedControllingPieces)
+            removePieceSqrControl(piece);
+        for(Piece piece : changedControllingPieces)
+            addPieceSqrControl(piece);
     }
 
     private void _rawMove(Square from, Square to) {
@@ -369,6 +380,16 @@ public class Board {
 
     public List<Move> getAllMoves() {
         return allMoves;
+    }
+
+    public boolean isLegal(Move move, boolean isWhiteTurn){
+        List<Piece> changedControllingPieces = getChangedControllingPieces(move);
+        _move(move);
+
+        Square kingSqr = (isWhiteTurn ? whiteKing: blackKing).getSquare();
+        List<Piece>[][] controlBoard = isWhiteTurn ? blackSqrControl : whiteSqrControl;
+        boolean ret = controlBoard[kingSqr.rank][kingSqr.file].isEmpty();
+
     }
 
 //    public boolean isLegal(Move move){
@@ -409,11 +430,9 @@ public class Board {
     public static void main(String[] args) {
         Board b = getInstance();
         System.out.println(b);
-        b.move(6, 5, 4, 5);
-        b.move(1, 4, 3, 4);
-        b.move(6, 6, 4, 6);
-        b.move(0, 3, 4, 7);
+        System.out.println(b.whiteSqrControl[5][5]);
+        b.move(6, 4, 4, 4);
         System.out.println(b);
-        b.move(7, 0, 0, 0);
+        System.out.println(b.whiteSqrControl[5][5]);
     }
 }
