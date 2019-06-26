@@ -16,24 +16,22 @@ public class King extends Piece {
         this(isWhite, new Square(rank, file));
     }
 
-    @Override
-    public List<Move> moves() {
-        List<Move> ret = super.moves();
-        ret.addAll(Board.getInstance().castleMoves());
-        return ret;
+    public King(Piece other){
+        super(other);
     }
 
     @Override
-    protected List<Square> _sqrControl(Board b) {
-        List<Square> ret = new ArrayList<>();
-        addStep(ret, 1, 1);
-        addStep(ret, 1, 0);
-        addStep(ret, 1, -1);
-        addStep(ret, 0, 1);
-        addStep(ret, 0, -1);
-        addStep(ret, -1, 1);
-        addStep(ret, -1, 0);
-        addStep(ret, -1, -1);
+    public List<Move> moves(Board board) {
+        List<Move> ret = new ArrayList<>();
+        addStep(ret, board, 1, 1);
+        addStep(ret, board, 1, 0);
+        addStep(ret, board, 1, -1);
+        addStep(ret, board, 0, 1);
+        addStep(ret, board, 0, -1);
+        addStep(ret, board, -1, 1);
+        addStep(ret, board, -1, 0);
+        addStep(ret, board, -1, -1);
+        ret.addAll(Board.getInstance().castleMoves());
         return ret;
     }
 }

@@ -11,17 +11,18 @@ public abstract class Piece {
     protected Square square;
     private final char c;
 
-    protected List<Square> controlledSquares;
-
     public Piece(boolean isWhite, Square square, char c) {
         this.isWhite = isWhite;
         this.square = square;
         this.c = c;
-        this.controlledSquares = new ArrayList<>();
     }
 
     public Piece(boolean isWhite, int rank, int file, char c) {
         this(isWhite, new Square(rank, file), c);
+    }
+
+    public Piece(Piece other){
+        this(other.isWhite, other.square, other.c);
     }
 
     public boolean isWhite() {
@@ -37,6 +38,7 @@ public abstract class Piece {
     }
 
     public boolean isAlly(Piece p) {
+        if(isEmpty()) return false;
         return isWhite ? p.isWhite() : p.isBlack();
     }
 
@@ -52,43 +54,50 @@ public abstract class Piece {
         this.square = square;
     }
 
-    public List<Move> moves() {
-        List<Square> controledSqrs = sqrControl();
-        List<Move> ret = new ArrayList<>();
-        for (Square to : controledSqrs)
-            if (!isAlly(Board.getInstance().get(to)))
-                ret.add(new Move(square, to));
-        return ret;
-    }
+    public abstract List<Move> moves(Board board);
 
-    public List<Square> sqrControl(){
-        return sqrControl(Board.getInstance());
-    }
-
-    public List<Square> sqrControl(Board board){
-        controlledSquares = _sqrControl(board);
-        return new ArrayList<>(controlledSquares);
-    }
-
-    protected abstract List<Square> _sqrControl(Board board);
-
-    public List<Square> getControlledSquares(){
-        return controlledSquares;
-    }
-
-    protected void addRay(List<Square> moves, Board board, int rankStep, int fileStep) {
+    protected void addRay(List<Move> moves, Board board, int rankStep, int fileStep) {
         for (Square to = new Square(square.rank + rankStep, square.file + fileStep);
              Board.isOnBoard(to); to = new Square(to.rank + rankStep, to.file + fileStep)) {
-            moves.add(to);
+            if(!board.get(to).isAlly(this))
+                moves.add(new Move(square, to));
             if (!board.get(to).isEmpty())
                 return;
         }
     }
 
-    protected void addStep(List<Square> moves, int rankStep, int fileStep) {
+    protected void addStep(List<Move> moves, Board board, int rankStep, int fileStep) {
         Square to = new Square(square.rank + rankStep, square.file + fileStep);
-        if (Board.isOnBoard(to))
-            moves.add(to);
+        if (Board.isOnBoard(to) && !board.get(to).isAlly(this))
+            moves.add(new Move(square, to));
+    }
+
+    @Override
+    public Piece clone(){
+        switch (c){
+            case '\u2654':
+            case '\u265a':
+                return new King(this);
+            case '\u2655':
+            case '\u265b':
+                return new Queen(this);
+            case '\u2656':
+            case '\u265c':
+                return new Rook(this);
+            case '\u2657':
+            case '\u265d':
+                return new Bishop(this);
+            case '\u2658':
+            case '\u265e':
+                return new Knight(this);
+            case '\u2659':
+            case '\u265f':
+                return new Pawn(this);
+            case '\u2001':
+                return this;
+            default:
+                throw new IllegalArgumentException("wow, a new piece");
+        }
     }
 
     @Override

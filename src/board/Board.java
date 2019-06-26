@@ -28,8 +28,6 @@ public class Board {
             BLACK_KING_START_SQR = new Square(0, 4);
 
     private final Piece[][] board = new Piece[8][8];
-    private final List<Piece>[][] whiteSqrControl = new List[8][8],
-            blackSqrControl = new List[8][8];//I hate java it should have generic arrays
     private EmptyPiece EP;
     private boolean isWhiteTurn;
     private Square enPassant;
@@ -39,7 +37,7 @@ public class Board {
             blackLongCastleRight;
     private Piece whiteKing, blackKing;
 
-    private List<Move> allMoves;
+    private List<Move> allWhiteMoves, allBlackMoves;
 
 //    private Result result;
 
@@ -91,25 +89,32 @@ public class Board {
         board[7][6] = new Knight(true, 7, 6);
         board[7][7] = new Rook(true, 7, 7);
 
-        for (int rank = 0; rank < 8; rank++)
-            for (int file = 0; file < 8; file++) {
-                whiteSqrControl[rank][file] = new ArrayList<>();
-                blackSqrControl[rank][file] = new ArrayList<>();
-            }
-        for (Piece[] file : board)
-            for (Piece piece : file) {
-                if (piece.isEmpty())
-                    continue;
-
-                if (piece.isWhite())
-                    for (Square to : piece.sqrControl(this))
-                        whiteSqrControl[to.rank][to.file].add(piece);
-                else
-                    for (Square to : piece.sqrControl(this))
-                        blackSqrControl[to.rank][to.file].add(piece);
-            }
-
 //        result = Result.PLAYING;
+    }
+
+    private Board(Board other) {
+        this.EP = other.EP;
+
+        this.enPassant = null;
+        this.whiteShortCastleRight = other.whiteShortCastleRight;
+        this.whiteLongCastleRight = other.whiteLongCastleRight;
+        this.blackShortCastleRight = other.blackShortCastleRight;
+        this.blackLongCastleRight = other.blackLongCastleRight;
+
+        this.isWhiteTurn = other.isWhiteTurn;
+
+        this.whiteKing = other.whiteKing.clone();
+        this.blackKing = other.blackKing.clone();
+
+        copyPieceArray(other, this);
+
+//        result = other.result;
+    }
+
+    private static void copyPieceArray(Board from, Board to) {
+        for (int rank = 0; rank < 8; rank++)
+            for (int file = 0; file < 8; file++)
+                to.board[rank][file] = from.board[rank][file].clone();
     }
 
     public Square getEnPassant() {
@@ -175,7 +180,7 @@ public class Board {
         if (!isOfColor(isWhiteTurn, get(m.getFrom())))
             throw new IllegalArgumentException("wait for your turn");
         System.out.println("start");
-        List<Move> moves = get(m.getFrom()).moves();
+        List<Move> moves = get(m.getFrom()).moves(this);
         for (Move move : moves)
             System.out.println(move);
         for (Move move : moves) {
@@ -194,7 +199,7 @@ public class Board {
         if (!isOfColor(isWhiteTurn, get(from)))
             throw new IllegalArgumentException("wait for your turn");
         System.out.println("start");
-        List<Move> moves = get(from).moves();
+        List<Move> moves = get(from).moves(this);
         for (Move move : moves)
             System.out.println(move);
         for (Move move : moves) {
@@ -209,12 +214,7 @@ public class Board {
     private void _move(Move move) {
         Square from = move.getFrom(), to = move.getTo();
 
-        changedControllingPieces.add(get(from));
-
         _rawMove(from, to);
-
-        changedControllingPieces.addAll(getControllingPieces(from));
-        changedControllingPieces.addAll(getControllingPieces(to));
 
         enPassant = null;
         if (move.isPawnJump) {
@@ -222,7 +222,6 @@ public class Board {
         }
         if (move.isEnPassant) {
             int jumpedPawnRank = to.rank + (isWhiteTurn ? 1 : -1);
-            changedControllingPieces.add(get(jumpedPawnRank, to.file));
             board[jumpedPawnRank][to.file] = EP;
         }
         if (move.isCastleShort) {
@@ -262,9 +261,6 @@ public class Board {
 
         isWhiteTurn = !isWhiteTurn;
 
-//        setAllMoves(isWhiteTurn);
-//        if(isInCheck(!isWhiteTurn)) throw new IllegalArgumentException("can't walk into check");
-
 //        result = getUpdatedResult(!isWhiteTurn);
 //
 //        if(result != Result.PLAYING)
@@ -295,7 +291,7 @@ public class Board {
 
     private boolean isInCheck(boolean isWhite) {
         Piece myKing = isWhite ? whiteKing : blackKing;
-        for (Move nextMove : getAllMoves()) {
+        for (Move nextMove : getAllMoves(!isWhite)) {
             if (nextMove.getTo().equals(myKing.getSquare()))
                 return true;
         }
@@ -314,47 +310,6 @@ public class Board {
 //            return Result.BLACK_WINS;
 //    }
 
-    private List<Piece> getControllingPieces(Square sqr){
-        List<Piece> ret = new ArrayList<>(whiteSqrControl[sqr.rank][sqr.file]);
-        ret.addAll(blackSqrControl[sqr.rank][sqr.file]);
-        return ret;
-    }
-
-    private List<Piece> getChangedControllingPieces(Move move){
-        List<Piece> changedControllingPieces = new ArrayList<>();
-        changedControllingPieces.add(get(move.getFrom()));
-        changedControllingPieces.add(get(move.getTo()));
-        changedControllingPieces.addAll(getControllingPieces(move.getFrom()));
-        changedControllingPieces.addAll(getControllingPieces(move.getTo()));
-        if(move.promotedTo!= Move.Promotion.NO_PROMOTION)
-            changedControllingPieces.add(get(move.getTo()));
-        return changedControllingPieces;
-    }
-
-    private void addPieceSqrControl(Piece piece){
-        if (piece.isEmpty()) return;
-        List<Square> newControlledSqrs = piece.sqrControl();
-        List[][] squareControlBoard = piece.isWhite() ? whiteSqrControl : blackSqrControl;
-        for(Square sqr : newControlledSqrs)
-            squareControlBoard[sqr.rank][sqr.file].add(piece);
-    }
-
-    private void removePieceSqrControl(Piece piece) {
-        if (piece.isEmpty()) return;
-        List<Square> oldControlledSqrs = piece.getControlledSquares();
-        List[][] squareControlBoard = piece.isWhite() ? whiteSqrControl : blackSqrControl;
-        for (Square sqr : oldControlledSqrs)
-            squareControlBoard[sqr.rank][sqr.file].remove(piece);
-    }
-
-    private void updateSqrControl(List<Piece> changedControllingPieces){
-
-        for(Piece piece : changedControllingPieces)
-            removePieceSqrControl(piece);
-        for(Piece piece : changedControllingPieces)
-            addPieceSqrControl(piece);
-    }
-
     private void _rawMove(Square from, Square to) {
         get(from).setSquare(to);
         board[to.rank][to.file] = get(from);
@@ -365,43 +320,37 @@ public class Board {
         return board[square.rank][square.file];
     }
 
-    public Piece get(int rank, int file){
+    public Piece get(int rank, int file) {
         return board[rank][file];
     }
 
-    public void setAllMoves(boolean forWhite) {
+    public List<Move> getAllMoves(boolean isWhite) {
         List<Move> moves = new ArrayList<>();
         for (Piece[] rank : board)
             for (Piece piece : rank)
-                if (isOfColor(forWhite, piece))
-                    moves.addAll(piece.moves());
-        allMoves = moves;
+                if (isOfColor(isWhite, piece))
+                    moves.addAll(piece.moves(this));
+        return moves;
     }
 
-    public List<Move> getAllMoves() {
-        return allMoves;
-    }
-
-    public boolean isLegal(Move move, boolean isWhiteTurn){
-        List<Piece> changedControllingPieces = getChangedControllingPieces(move);
+    private boolean _isLegal(Move move) {
         _move(move);
-
-        Square kingSqr = (isWhiteTurn ? whiteKing: blackKing).getSquare();
-        List<Piece>[][] controlBoard = isWhiteTurn ? blackSqrControl : whiteSqrControl;
-        boolean ret = controlBoard[kingSqr.rank][kingSqr.file].isEmpty();
-
+        return !isInCheck(!isWhiteTurn);
     }
 
-//    public boolean isLegal(Move move){
-//
-//    }
+    public boolean isLegal(Move move) {
+        Board copy = new Board(this);
+        return copy._isLegal(move);
+    }
 
-//    public List<Move> getAllLegalMoves(){
-//        List<Move> ret = new ArrayList<>();
-//        for(Move move : allMoves){
-//
-//        }
-//    }
+    public List<Move> getAllLegalMoves() {
+        List<Move> ret = new ArrayList<>();
+        for (Move move : getAllMoves(isWhiteTurn)) {
+            if (isLegal(move))
+                ret.add(move);
+        }
+        return ret;
+    }
 
     public static boolean isOnBoard(int rank, int file) {
         return file >= 0 && file < 8 && rank >= 0 && rank < 8;
@@ -430,9 +379,15 @@ public class Board {
     public static void main(String[] args) {
         Board b = getInstance();
         System.out.println(b);
-        System.out.println(b.whiteSqrControl[5][5]);
         b.move(6, 4, 4, 4);
+        b.move(1, 5, 3, 5);
         System.out.println(b);
-        System.out.println(b.whiteSqrControl[5][5]);
+        b.move(7, 3, 3, 7);
+        System.out.println(b);
+        System.out.println("--------------");
+        System.out.println(b.getAllLegalMoves());
+        System.out.println("--------------");
+        b.move(1, 6, 2, 6);
+        System.out.println(b);
     }
 }

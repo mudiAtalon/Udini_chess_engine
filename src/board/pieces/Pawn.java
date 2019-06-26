@@ -14,6 +14,10 @@ public class Pawn extends Piece {
         this(isWhite, new Square(rank, file));
     }
 
+    public Pawn(Piece other){
+        super(other);
+    }
+
     private boolean hasNotMoved() {
         if (isWhite)
             return square.rank == 6;
@@ -37,47 +41,37 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public List<Move> moves() {
+    public List<Move> moves(Board board) {
         List<Move> ret = new ArrayList<>();
         int rankDiff = isWhite ? -1 : 1;
         int fileDiff = -1;
         Square to = new Square(square.rank + rankDiff, square.file + fileDiff);
         if (Board.isOnBoard(to)) {
-            if (isEnemy(Board.getInstance().get(to)))
+            if (isEnemy(board.get(to)))
                 addMoveToList(new Move(square, to), ret);
-            if (to.equals(Board.getInstance().getEnPassant()))
+            if (to.equals(board.getEnPassant()))
                 addMoveToList(new Move(square, to, false, true), ret);
         }
         fileDiff = 0;
         to = new Square(square.rank + rankDiff, square.file + fileDiff);
-        if (Board.isOnBoard(to) && Board.getInstance().get(to).isEmpty()) {
+        if (Board.isOnBoard(to) && board.get(to).isEmpty()) {
             addMoveToList(new Move(square, to), ret);
             if (hasNotMoved()) {
                 to = new Square(to.rank + rankDiff, to.file);
-                if (Board.getInstance().get(to).isEmpty())
+                if (board.get(to).isEmpty())
                     addMoveToList(new Move(square, to, true), ret);
             }
         }
         fileDiff = 1;
         to = new Square(square.rank + rankDiff, square.file + fileDiff);
         if (Board.isOnBoard(to)) {
-            if (isEnemy(Board.getInstance().get(to)))
+            if (isEnemy(board.get(to)))
                 addMoveToList(new Move(square, to), ret);
-            if (to.equals(Board.getInstance().getEnPassant()))
+            if (to.equals(board.getEnPassant()))
                 addMoveToList(new Move(square, to, false, true), ret);
         }
         return ret;
     }
 
-    @Override
-    protected List<Square> _sqrControl(Board b) {
-        List<Square> ret = new ArrayList<>();
-        int rankdiff = isWhite ? -1 : 1;
-        if (square.file != 7)
-            ret.add(new Square(square.rank + rankdiff, square.file + 1));
-        if (square.file != 0)
-            ret.add(new Square(square.rank + rankdiff, square.file - 1));
-        return ret;
-    }
 }
 

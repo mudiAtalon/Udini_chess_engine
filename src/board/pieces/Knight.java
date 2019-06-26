@@ -1,6 +1,7 @@
 package board.pieces;
 
 import board.Board;
+import board.Move;
 import board.Square;
 
 import java.util.*;
@@ -15,17 +16,21 @@ public class Knight extends Piece {
         this(isWhite, new Square(rank, file));
     }
 
+    public Knight(Piece other){
+        super(other);
+    }
+
     @Override
-    protected List<Square> _sqrControl(Board b) {
-        List<Square> ret = new ArrayList<>();
-        addStep(ret, 2, 1);
-        addStep(ret, -2, 1);
-        addStep(ret, 2, -1);
-        addStep(ret, -2, -1);
-        addStep(ret, 1, 2);
-        addStep(ret, -1, 2);
-        addStep(ret, 1, -2);
-        addStep(ret, -1, -2);
+    public List<Move> moves(Board board) {
+        List<Move> ret = new ArrayList<>();
+        addStep(ret, board, 2, 1);
+        addStep(ret, board, -2, 1);
+        addStep(ret, board, 2, -1);
+        addStep(ret, board, -2, -1);
+        addStep(ret, board, 1, 2);
+        addStep(ret, board, -1, 2);
+        addStep(ret, board, 1, -2);
+        addStep(ret, board, -1, -2);
         return ret;
     }
 }

@@ -1,6 +1,7 @@
 package board.pieces;
 
 import board.Board;
+import board.Move;
 import board.Square;
 
 import java.util.*;
@@ -15,9 +16,13 @@ public class Bishop extends Piece {
         this(isWhite, new Square(rank, file));
     }
 
+    public Bishop(Piece other){
+        super(other);
+    }
+
     @Override
-    protected List<Square> _sqrControl(Board board) {
-        List<Square> ret = new ArrayList<>();
+    public List<Move> moves(Board board) {
+        List<Move> ret = new ArrayList<>();
         addRay(ret, board, 1, 1);
         addRay(ret, board, -1, 1);
         addRay(ret, board, 1, -1);

@@ -19,12 +19,7 @@ public class EmptyPiece extends Piece {
     }
 
     @Override
-    public List<Move> moves() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    protected List<Square> _sqrControl(Board b) {
+    public List<Move> moves(Board board) {
         return new ArrayList<>();
     }
 
