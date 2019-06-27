@@ -15,8 +15,9 @@ public class Board implements Position {
             BLACK_LONG_ROOK_START_SQR = new Square(0, 0),
             BLACK_KING_START_SQR = new Square(0, 4);
 
-    private final Piece[][] board = new Piece[8][8];
     private final boolean isRealBoard;
+
+    private final Piece[][] board = new Piece[8][8];
     private EmptyPiece EP;
     private boolean isWhiteTurn;
     private Square enPassant;
