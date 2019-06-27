@@ -6,7 +6,7 @@ import java.util.*;
 
 import board.pieces.*;
 
-public class Board {
+public class Board implements Position{
 
     private static Board instance = null;
 
@@ -37,16 +37,16 @@ public class Board {
             blackLongCastleRight;
     private Piece whiteKing, blackKing;
 
-    private List<Move> allWhiteMoves, allBlackMoves;
+    private List<Move> allLegalMoves;
 
-//    private Result result;
+    private Result result;
 
-//    private enum Result{
-//        WHITE_WINS,
-//        BLACK_WINS,
-//        DRAW,
-//        PLAYING
-//    }
+    public enum Result{
+        WHITE_VICTORY,
+        BLACK_VICTORY,
+        DRAW,
+        PLAYING
+    }
 
     private Board() {
         EP = EmptyPiece.getInstance();
@@ -89,7 +89,7 @@ public class Board {
         board[7][6] = new Knight(true, 7, 6);
         board[7][7] = new Rook(true, 7, 7);
 
-//        result = Result.PLAYING;
+        result = Result.PLAYING;
     }
 
     private Board(Board other) {
@@ -108,13 +108,22 @@ public class Board {
 
         copyPieceArray(other, this);
 
-//        result = other.result;
+        Square wks = whiteKing.getSquare(), bks = blackKing.getSquare();
+        board[wks.rank][wks.file] = whiteKing;
+        board[bks.rank][bks.file] = blackKing;
+
+        this.result = other.result;
     }
 
     private static void copyPieceArray(Board from, Board to) {
         for (int rank = 0; rank < 8; rank++)
             for (int file = 0; file < 8; file++)
                 to.board[rank][file] = from.board[rank][file].clone();
+    }
+
+    @Override
+    public boolean isWhiteTurn(){
+        return isWhiteTurn;
     }
 
     public Square getEnPassant() {
@@ -177,14 +186,8 @@ public class Board {
     public void move(Move m) {
 //        if(result != Result.PLAYING)
 //            throw new IllegalArgumentException("the game is over. go home!");
-        if (!isOfColor(isWhiteTurn, get(m.getFrom())))
-            throw new IllegalArgumentException("wait for your turn");
-        System.out.println("start");
-        List<Move> moves = get(m.getFrom()).moves(this);
-        for (Move move : moves)
-            System.out.println(move);
-        for (Move move : moves) {
-            if (move.isTo(m.getTo())) {
+        for (Move move : getAllLegalMoves()) {
+            if (move.equals(m)) {
                 _move(m);
                 return;
             }
@@ -196,14 +199,9 @@ public class Board {
     public void move(Square from, Square to) {
 //        if(result != Result.PLAYING)
 //            throw new IllegalArgumentException("the game is over. go home!");
-        if (!isOfColor(isWhiteTurn, get(from)))
-            throw new IllegalArgumentException("wait for your turn");
-        System.out.println("start");
-        List<Move> moves = get(from).moves(this);
-        for (Move move : moves)
-            System.out.println(move);
-        for (Move move : moves) {
-            if (move.isTo(to)) {
+        Move m = new Move(from, to);
+        for (Move move : getAllLegalMoves()) {
+            if (move.isSameFromTo(m)) {
                 _move(move);
                 return;
             }
@@ -289,7 +287,7 @@ public class Board {
             blackLongCastleRight = false;
     }
 
-    private boolean isInCheck(boolean isWhite) {
+    public boolean isInCheck(boolean isWhite) {
         Piece myKing = isWhite ? whiteKing : blackKing;
         for (Move nextMove : getAllMoves(!isWhite)) {
             if (nextMove.getTo().equals(myKing.getSquare()))
@@ -297,18 +295,6 @@ public class Board {
         }
         return false;
     }
-
-//    private Result getUpdatedResult(boolean whitePlayedLast){
-//        if(getAllMoves().size() > 0)
-//            return Result.PLAYING;
-//        setAllMoves(whitePlayedLast);
-//        if(!isInCheck(!whitePlayedLast))
-//            return Result.DRAW;
-//        if(whitePlayedLast)
-//            return Result.WHITE_WINS;
-//        else
-//            return Result.BLACK_WINS;
-//    }
 
     private void _rawMove(Square from, Square to) {
         get(from).setSquare(to);
@@ -343,13 +329,34 @@ public class Board {
         return copy._isLegal(move);
     }
 
-    public List<Move> getAllLegalMoves() {
-        List<Move> ret = new ArrayList<>();
+    private void setAllLegalMoves(){
+        List<Move> moves = new ArrayList<>();
         for (Move move : getAllMoves(isWhiteTurn)) {
             if (isLegal(move))
-                ret.add(move);
+                moves.add(move);
         }
-        return ret;
+        allLegalMoves = moves;
+    }
+
+    @Override
+    public List<Move> getAllLegalMoves() {
+        return allLegalMoves;
+    }
+
+    public boolean isGameOver(){
+        return allLegalMoves.size() == 0;
+    }
+
+    @Override
+    public Result getResult(){
+        if(!isGameOver())
+            return Result.PLAYING;
+        if(!isInCheck(isWhiteTurn()))
+            return Result.DRAW;
+        if(isWhiteTurn())
+            return Result.BLACK_VICTORY;
+        else
+            return Result.WHITE_VICTORY;
     }
 
     public static boolean isOnBoard(int rank, int file) {
@@ -379,15 +386,14 @@ public class Board {
     public static void main(String[] args) {
         Board b = getInstance();
         System.out.println(b);
-        b.move(6, 4, 4, 4);
-        b.move(1, 5, 3, 5);
-        System.out.println(b);
-        b.move(7, 3, 3, 7);
+        b.move(6, 2, 4, 2);
+        b.move(1, 3, 3, 3);
+        b.move(7, 3, 4, 0);
         System.out.println(b);
         System.out.println("--------------");
         System.out.println(b.getAllLegalMoves());
         System.out.println("--------------");
-        b.move(1, 6, 2, 6);
+        b.move(1, 1, 3, 1);
         System.out.println(b);
     }
 }

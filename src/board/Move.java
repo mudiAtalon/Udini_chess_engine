@@ -83,6 +83,13 @@ public class Move {
 
     }
 
+    public boolean isSameFromTo(Move other){
+        return rankFrom == other.rankFrom &&
+                fileFrom == other.fileFrom &&
+                rankTo == other.rankTo &&
+                fileTo == other.fileTo;
+    }
+
     @Override
     public String toString(){
         return "move from (" +
