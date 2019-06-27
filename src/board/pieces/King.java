@@ -31,7 +31,7 @@ public class King extends Piece {
         addStep(ret, board, -1, 1);
         addStep(ret, board, -1, 0);
         addStep(ret, board, -1, -1);
-        ret.addAll(Board.getInstance().castleMoves());
+        ret.addAll(board.castleMoves());
         return ret;
     }
 }

@@ -6,19 +6,7 @@ import java.util.*;
 
 import board.pieces.*;
 
-public class Board implements Position{
-
-    private static Board instance = null;
-
-    public static Board getInstance() {
-        if (instance == null)
-            init();
-        return instance;
-    }
-
-    private static void init() {
-        instance = new Board();
-    }
+public class Board implements Position {
 
     private static final Square WHITE_SHORT_ROOK_START_SQR = new Square(7, 7),
             WHITE_LONG_ROOK_START_SQR = new Square(7, 0),
@@ -28,6 +16,7 @@ public class Board implements Position{
             BLACK_KING_START_SQR = new Square(0, 4);
 
     private final Piece[][] board = new Piece[8][8];
+    private final boolean isRealBoard;
     private EmptyPiece EP;
     private boolean isWhiteTurn;
     private Square enPassant;
@@ -41,14 +30,14 @@ public class Board implements Position{
 
     private Result result;
 
-    public enum Result{
+    public enum Result {
         WHITE_VICTORY,
         BLACK_VICTORY,
         DRAW,
         PLAYING
     }
 
-    private Board() {
+    public Board() {
         EP = EmptyPiece.getInstance();
 
         enPassant = null;
@@ -90,6 +79,10 @@ public class Board implements Position{
         board[7][7] = new Rook(true, 7, 7);
 
         result = Result.PLAYING;
+
+        isRealBoard = true;
+
+        updateAllLegalMoves();
     }
 
     private Board(Board other) {
@@ -113,6 +106,10 @@ public class Board implements Position{
         board[bks.rank][bks.file] = blackKing;
 
         this.result = other.result;
+
+        this.allLegalMoves = other.allLegalMoves;
+
+        isRealBoard = false;
     }
 
     private static void copyPieceArray(Board from, Board to) {
@@ -122,7 +119,7 @@ public class Board implements Position{
     }
 
     @Override
-    public boolean isWhiteTurn(){
+    public boolean isWhiteTurn() {
         return isWhiteTurn;
     }
 
@@ -183,17 +180,15 @@ public class Board implements Position{
         move(new Square(rankFrom, fileFrom), new Square(rankTo, fileTo));
     }
 
-    public void move(Move m) {
-//        if(result != Result.PLAYING)
-//            throw new IllegalArgumentException("the game is over. go home!");
-        for (Move move : getAllLegalMoves()) {
-            if (move.equals(m)) {
-                _move(m);
-                return;
-            }
+    public void move(Move move) {
+        if (result != Result.PLAYING)
+            throw new IllegalArgumentException("the game is over. go home!");
+        if (getAllLegalMoves().contains(move)) {
+            _move(move);
+            return;
         }
         throw new IllegalArgumentException("no move from " +
-                m.getFrom() + " to " + m.getTo());
+                move.getFrom() + " to " + move.getTo());
     }
 
     public void move(Square from, Square to) {
@@ -259,10 +254,7 @@ public class Board implements Position{
 
         isWhiteTurn = !isWhiteTurn;
 
-//        result = getUpdatedResult(!isWhiteTurn);
-//
-//        if(result != Result.PLAYING)
-//            System.out.println(result);
+        if(isRealBoard) updateAllLegalMoves();
     }
 
     private void updateWhiteCastleRights(Move move) {
@@ -329,7 +321,7 @@ public class Board implements Position{
         return copy._isLegal(move);
     }
 
-    private void setAllLegalMoves(){
+    private void updateAllLegalMoves() {
         List<Move> moves = new ArrayList<>();
         for (Move move : getAllMoves(isWhiteTurn)) {
             if (isLegal(move))
@@ -343,17 +335,17 @@ public class Board implements Position{
         return allLegalMoves;
     }
 
-    public boolean isGameOver(){
+    public boolean isGameOver() {
         return allLegalMoves.size() == 0;
     }
 
     @Override
-    public Result getResult(){
-        if(!isGameOver())
+    public Result getResult() {
+        if (!isGameOver())
             return Result.PLAYING;
-        if(!isInCheck(isWhiteTurn()))
+        if (!isInCheck(isWhiteTurn()))
             return Result.DRAW;
-        if(isWhiteTurn())
+        if (isWhiteTurn())
             return Result.BLACK_VICTORY;
         else
             return Result.WHITE_VICTORY;
@@ -380,20 +372,7 @@ public class Board implements Position{
             }
             ret.append(System.lineSeparator());
         }
+        ret.append(System.lineSeparator());
         return ret.toString();
-    }
-
-    public static void main(String[] args) {
-        Board b = getInstance();
-        System.out.println(b);
-        b.move(6, 2, 4, 2);
-        b.move(1, 3, 3, 3);
-        b.move(7, 3, 4, 0);
-        System.out.println(b);
-        System.out.println("--------------");
-        System.out.println(b.getAllLegalMoves());
-        System.out.println("--------------");
-        b.move(1, 1, 3, 1);
-        System.out.println(b);
     }
 }
