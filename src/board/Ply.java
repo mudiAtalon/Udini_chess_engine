@@ -1,46 +1,46 @@
 package board;
 
-public class Move {
+public class Ply {
 
-    public static final Move WHITE_SHORT_CASTLE = new Move(0, 4, 0, 6, Promotion.NO_PROMOTION, false, false, true, false),
-            WHITE_LONG_CASTLE = new Move(0, 4, 0, 2, Promotion.NO_PROMOTION, false, false, true, false),
-            BLACK_SHORT_CASTLE = new Move(7, 4, 7, 6, Promotion.NO_PROMOTION, false, false, true, false),
-            BLACK_LONG_CASTLE = new Move(7, 4, 7, 2, Promotion.NO_PROMOTION, false, false, true, false);
+    public static final Ply WHITE_SHORT_CASTLE = new Ply(0, 4, 0, 6, Promotion.NO_PROMOTION, false, false, true, false),
+            WHITE_LONG_CASTLE = new Ply(0, 4, 0, 2, Promotion.NO_PROMOTION, false, false, true, false),
+            BLACK_SHORT_CASTLE = new Ply(7, 4, 7, 6, Promotion.NO_PROMOTION, false, false, true, false),
+            BLACK_LONG_CASTLE = new Ply(7, 4, 7, 2, Promotion.NO_PROMOTION, false, false, true, false);
 
     public final int rankFrom, fileFrom, rankTo, fileTo;
     public final boolean isPawnJump, isEnPassant;
     public final boolean isCastleShort, isCastleLong;
     public final Promotion promotedTo;
 
-    public Move(Square from, Square to) {
+    public Ply(Square from, Square to) {
         this(from.rank, from.file, to.rank, to.file);
     }
 
-    public Move(Square from, Square to, boolean isPawnJump) {
+    public Ply(Square from, Square to, boolean isPawnJump) {
         this(from.rank, from.file, to.rank, to.file, Promotion.NO_PROMOTION, isPawnJump, false, false, false);
     }
 
-    public Move(Square from, Square to, boolean isPawnJump, boolean isEnPassant) {
+    public Ply(Square from, Square to, boolean isPawnJump, boolean isEnPassant) {
         this(from.rank, from.file, to.rank, to.file, Promotion.NO_PROMOTION, isPawnJump, isEnPassant, false, false);
     }
 
-    public Move(Square from, Square to, boolean isPawnJump, boolean isEnPassant, boolean isCastleShort, boolean isCastleLong) {
+    public Ply(Square from, Square to, boolean isPawnJump, boolean isEnPassant, boolean isCastleShort, boolean isCastleLong) {
         this(from.rank, from.file, to.rank, to.file, Promotion.NO_PROMOTION, isPawnJump, isEnPassant, isCastleShort, isCastleLong);
     }
 
-    public Move(Square from, Square to, Promotion promotedTo) {
+    public Ply(Square from, Square to, Promotion promotedTo) {
         this(from.rank, from.file, to.rank, to.file, promotedTo, false, false, false, false);
     }
 
-    public Move(int rankFrom, int fileFrom, int rankTo, int fileTo) {
+    public Ply(int rankFrom, int fileFrom, int rankTo, int fileTo) {
         this(rankFrom, fileFrom, rankTo, fileTo, Promotion.NO_PROMOTION, false, false, false, false);
     }
 
-    public Move(int rankFrom, int fileFrom, int rankTo, int fileTo, Promotion promotedTo) {
+    public Ply(int rankFrom, int fileFrom, int rankTo, int fileTo, Promotion promotedTo) {
         this(rankFrom, fileFrom, rankTo, fileTo, promotedTo, false, false, false, false);
     }
 
-    public Move(int rankFrom, int fileFrom, int rankTo, int fileTo, Promotion promotedTo, boolean isPawnJump, boolean isEnPassant, boolean isCastleShort, boolean isCastleLong) {
+    public Ply(int rankFrom, int fileFrom, int rankTo, int fileTo, Promotion promotedTo, boolean isPawnJump, boolean isEnPassant, boolean isCastleShort, boolean isCastleLong) {
         this.rankFrom = rankFrom;
         this.fileFrom = fileFrom;
         this.rankTo = rankTo;
@@ -74,9 +74,9 @@ public class Move {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Move))
+        if (!(o instanceof Ply))
             return false;
-        Move other = (Move) o;
+        Ply other = (Ply) o;
         return rankFrom == other.rankFrom &&
                 fileFrom == other.fileFrom &&
                 rankTo == other.rankTo &&
@@ -89,7 +89,7 @@ public class Move {
 
     }
 
-    public boolean isSameFromTo(Move other) {
+    public boolean isSameFromTo(Ply other) {
         return rankFrom == other.rankFrom &&
                 fileFrom == other.fileFrom &&
                 rankTo == other.rankTo &&

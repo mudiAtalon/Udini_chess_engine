@@ -1,8 +1,7 @@
 package board.pieces;
 
 import board.Board;
-import board.Move;
-import board.Square;
+import board.Ply;
 
 import java.util.*;
 
@@ -19,7 +18,7 @@ public class EmptyPiece extends Piece {
     }
 
     @Override
-    public List<Move> moves(Board board) {
+    public List<Ply> moves(Board board) {
         return new ArrayList<>();
     }
 

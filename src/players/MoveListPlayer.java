@@ -1,29 +1,30 @@
 package players;
 
-import board.Move;
+import board.Ply;
 
 import java.util.List;
 
 public class MoveListPlayer implements Player {
 
-    private final List<Move> moves;
+    private final List<Ply> moves;
     private int ind;
 
-    public MoveListPlayer(List<Move> moves){
+    public MoveListPlayer(List<Ply> moves){
         this.moves = moves;
         ind = -1;
     }
 
     @Override
-    public Move getChosenMove(Position pos) {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public Ply getChosenMove(Position pos) {
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         ind++;
+        System.out.println("playing move " + (ind+1));
         if(ind<moves.size())
             return moves.get(ind);
-        return pos.getAllLegalMoves().get(0);
+        return pos.getAllLegalPlies().get(0);
     }
 }

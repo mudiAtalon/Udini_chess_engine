@@ -1,7 +1,7 @@
 package board.pieces;
 
 import board.Board;
-import board.Move;
+import board.Ply;
 import board.Square;
 
 import java.util.*;
@@ -75,22 +75,30 @@ public abstract class Piece {
         this.square = square;
     }
 
-    public abstract List<Move> moves(Board board);
+    public abstract List<Ply> moves(Board board);
 
-    protected void addRay(List<Move> moves, Board board, int rankStep, int fileStep) {
+    protected void addRay(List<Ply> plies, Board board, int rankStep, int fileStep) {
         for (Square to = new Square(square.rank + rankStep, square.file + fileStep);
              Board.isOnBoard(to); to = new Square(to.rank + rankStep, to.file + fileStep)) {
             if(!board.get(to).isAlly(this))
-                moves.add(new Move(square, to));
+                plies.add(new Ply(square, to));
             if (!board.get(to).isEmpty())
                 return;
         }
     }
 
-    protected void addStep(List<Move> moves, Board board, int rankStep, int fileStep) {
+    protected void addStep(List<Ply> plies, Board board, int rankStep, int fileStep) {
         Square to = new Square(square.rank + rankStep, square.file + fileStep);
         if (Board.isOnBoard(to) && !board.get(to).isAlly(this))
-            moves.add(new Move(square, to));
+            plies.add(new Ply(square, to));
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(!(o instanceof Piece))
+            return false;
+        Piece other = (Piece) o;
+        return this.pieceType == other.pieceType;
     }
 
     @Override

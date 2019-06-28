@@ -1,9 +1,7 @@
 package players;
 
-import board.Move;
+import board.Ply;
 import board.Square;
-import board.pieces.Piece;
-import com.sun.org.apache.xalan.internal.xsltc.compiler.Pattern;
 
 import java.util.Scanner;
 
@@ -16,8 +14,8 @@ public class CommandLinePlayer implements Player {
     }
 
     @Override
-    public Move getChosenMove(Position pos) {
-        if(isCastleFromUser("do you want to castle? (true/false)")){
+    public Ply getChosenMove(Position pos) {
+        if (isCastleFromUser("do you want to castle? (true/false)")) {
             return getCastleMove(pos.isWhiteTurn(), isShortCastleFromUser("castle short? (true/false)"));
         }
 
@@ -25,29 +23,29 @@ public class CommandLinePlayer implements Player {
                 to = getSquareFromUser("enter destination square");
 
         if (isPromotion(pos, from, to)) {
-            Move.Promotion promotion = getPromotionFromUser("promote to a:");
-            return new Move(from, to, promotion);
+            Ply.Promotion promotion = getPromotionFromUser("promote to a:");
+            return new Ply(from, to, promotion);
         }
 
-        if(isPawnJump(pos, from, to))
-            return new Move(from, to, true);
+        if (isPawnJump(pos, from, to))
+            return new Ply(from, to, true);
 
-        if(isEnPassant(pos, from, to))
-            return new Move(from, to, false, true);
+        if (isEnPassant(pos, from, to))
+            return new Ply(from, to, false, true);
 
-        return new Move(from, to);
+        return new Ply(from, to);
     }
 
-    private boolean isCastleFromUser(String message){
+    private boolean isCastleFromUser(String message) {
         System.out.println(message);
-        if(!input.hasNextBoolean())
+        if (!input.hasNextBoolean())
             throw new IllegalArgumentException("not a boolean");
         return input.nextBoolean();
     }
 
-    private boolean isShortCastleFromUser(String message){
+    private boolean isShortCastleFromUser(String message) {
         System.out.println(message);
-        if(!input.hasNextBoolean())
+        if (!input.hasNextBoolean())
             throw new IllegalArgumentException("not a boolean");
         return input.nextBoolean();
     }
@@ -63,39 +61,38 @@ public class CommandLinePlayer implements Player {
         if (charRank < 49 || charRank >= 57)
             throw new IllegalArgumentException("not a square");
 
-        int rank = charRank - '1', file = charFile -'a';
+        int rank = charRank - '1', file = charFile - 'a';
         return new Square(rank, file);
     }
 
-    private Move.Promotion getPromotionFromUser(String message) {
+    private Ply.Promotion getPromotionFromUser(String message) {
         System.out.println(message);
         String strPieceType = input.next().toLowerCase();
         switch (strPieceType) {
             case "queen":
-                return Move.Promotion.QUEEN;
+                return Ply.Promotion.QUEEN;
             case "rook":
-                return Move.Promotion.ROOK;
+                return Ply.Promotion.ROOK;
             case "bishop":
-                return Move.Promotion.BISHOP;
+                return Ply.Promotion.BISHOP;
             case "knight":
-                return Move.Promotion.KNIGHT;
+                return Ply.Promotion.KNIGHT;
             default:
                 throw new IllegalArgumentException("can't promote to that");
         }
     }
 
-    private Move getCastleMove(boolean isWhite, boolean isShort){
-        if(isShort) {
-            if(isWhite)
-                return Move.WHITE_SHORT_CASTLE;
+    private Ply getCastleMove(boolean isWhite, boolean isShort) {
+        if (isShort) {
+            if (isWhite)
+                return Ply.WHITE_SHORT_CASTLE;
             else
-                return Move.BLACK_SHORT_CASTLE;
-        }
-        else{
-            if(isWhite)
-                return Move.WHITE_LONG_CASTLE;
+                return Ply.BLACK_SHORT_CASTLE;
+        } else {
+            if (isWhite)
+                return Ply.WHITE_LONG_CASTLE;
             else
-                return Move.BLACK_SHORT_CASTLE;
+                return Ply.BLACK_SHORT_CASTLE;
         }
     }
 
@@ -108,15 +105,15 @@ public class CommandLinePlayer implements Player {
                     && to.rank == 0;
     }
 
-    private boolean isPawnJump(Position pos, Square from, Square to){
-        if(pos.isWhiteTurn())
+    private boolean isPawnJump(Position pos, Square from, Square to) {
+        if (pos.isWhiteTurn())
             return from.rank == 1 && to.rank == 3 && pos.isPawn(from);
         else
             return from.rank == 6 && to.rank == 4 && pos.isPawn(from);
 
     }
 
-    private boolean isEnPassant(Position pos, Square from, Square to){
+    private boolean isEnPassant(Position pos, Square from, Square to) {
         return pos.isPawn(from) && pos.isEnPassantSquare(to);
     }
 }

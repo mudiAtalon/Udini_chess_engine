@@ -1,7 +1,6 @@
 package players;
 
 import board.*;
-import board.pieces.Piece;
 
 import java.util.List;
 
@@ -9,7 +8,7 @@ public interface Position {
 
     boolean isWhiteTurn();
 
-    List<Move> getAllLegalMoves();
+    List<Ply> getAllLegalPlies();
 
     Board.Result getResult();
 

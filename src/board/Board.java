@@ -28,7 +28,10 @@ public class Board implements Position {
             blackLongCastleRight;
     private Piece whiteKing, blackKing;
 
-    private List<Move> allLegalMoves;
+    private List<Ply> allLegalPlies;
+
+    private int fiftyMovePlyCounter;
+    private Map<Board, Integer> positionRepetitionCounter;
 
     private Result result;
 
@@ -82,6 +85,10 @@ public class Board implements Position {
 
         result = Result.PLAYING;
 
+        fiftyMovePlyCounter = 0;
+        positionRepetitionCounter = new HashMap<>();
+        positionRepetitionCounter.put(this, 1);
+
         isRealBoard = true;
 
         updateAllLegalMoves();
@@ -109,7 +116,10 @@ public class Board implements Position {
 
         this.result = other.result;
 
-        this.allLegalMoves = other.allLegalMoves;
+        this.allLegalPlies = other.allLegalPlies;
+
+        this.fiftyMovePlyCounter = Integer.MIN_VALUE;
+        positionRepetitionCounter = null;
 
         isRealBoard = false;
     }
@@ -147,7 +157,7 @@ public class Board implements Position {
         return true;
     }
 
-    public List<Move> castleMoves() {
+    public List<Ply> castleMoves() {
         if (isWhiteTurn) {
             return castleMovesWhite();
         } else {
@@ -155,30 +165,30 @@ public class Board implements Position {
         }
     }
 
-    private List<Move> castleMovesWhite() {
-        List<Move> ret = new ArrayList<>();
+    private List<Ply> castleMovesWhite() {
+        List<Ply> ret = new ArrayList<>();
         Square from = new Square(0, 4);
         if (whiteShortCastleRight && canCastle(true, true)) {
             Square to = new Square(0, 6);
-            ret.add(new Move(from, to, false, false, true, false));
+            ret.add(new Ply(from, to, false, false, true, false));
         }
         if (whiteLongCastleRight && canCastle(true, false)) {
             Square to = new Square(0, 2);
-            ret.add(new Move(from, to, false, false, false, true));
+            ret.add(new Ply(from, to, false, false, false, true));
         }
         return ret;
     }
 
-    private List<Move> castleMovesBlack() {
-        List<Move> ret = new ArrayList<>();
+    private List<Ply> castleMovesBlack() {
+        List<Ply> ret = new ArrayList<>();
         Square from = new Square(7, 4);
         if (blackShortCastleRight && canCastle(false, true)) {
             Square to = new Square(7, 6);
-            ret.add(new Move(from, to, false, false, true, false));
+            ret.add(new Ply(from, to, false, false, true, false));
         }
         if (blackLongCastleRight && canCastle(false, false)) {
             Square to = new Square(7, 2);
-            ret.add(new Move(from, to, false, false, false, true));
+            ret.add(new Ply(from, to, false, false, false, true));
         }
         return ret;
     }
@@ -187,71 +197,76 @@ public class Board implements Position {
         move(new Square(rankFrom, fileFrom), new Square(rankTo, fileTo));
     }
 
-    public void move(Move move) {
+    public void move(Ply ply) {
         if (result != Result.PLAYING)
             throw new IllegalArgumentException("the game is over. go home!");
-        if (getAllLegalMoves().contains(move)) {
-            _move(move);
+        if (getAllLegalPlies().contains(ply)) {
+            _move(ply);
             return;
         }
-        throw new IllegalArgumentException("no move from " +
-                move.getFrom() + " to " + move.getTo());
+        throw new IllegalArgumentException("no ply from " +
+                ply.getFrom() + " to " + ply.getTo());
     }
 
     public void move(Square from, Square to) {
 //        if(result != Result.PLAYING)
 //            throw new IllegalArgumentException("the game is over. go home!");
-        Move m = new Move(from, to);
-        for (Move move : getAllLegalMoves()) {
-            if (move.isSameFromTo(m)) {
-                _move(move);
+        Ply m = new Ply(from, to);
+        for (Ply ply : getAllLegalPlies()) {
+            if (ply.isSameFromTo(m)) {
+                _move(ply);
                 return;
             }
         }
         throw new IllegalArgumentException("no legal move from " + from + " to " + to);
     }
 
-    private void _move(Move move) {
-        Square from = move.getFrom(), to = move.getTo();
+    private void _move(Ply ply) {
+        boolean isFiftyMoveBreaker = false;
+
+        Square from = ply.getFrom(), to = ply.getTo();
+
+        if (isPawn(from) || !get(to).isEmpty())
+            isFiftyMoveBreaker = true;
 
         _rawMove(from, to);
 
         enPassant = null;
-        if (move.isPawnJump) {
+        if (ply.isPawnJump) {
             enPassant = new Square(to.rank + (isWhiteTurn ? -1 : 1), to.file);
         }
-        if (move.isEnPassant) {
+        if (ply.isEnPassant) {
             int jumpedPawnRank = to.rank + (isWhiteTurn ? -1 : 1);
             board[jumpedPawnRank][to.file] = EP;
         }
-        if (move.isCastleShort) {
+        if (ply.isCastleShort) {
             from = isWhiteTurn ? WHITE_SHORT_ROOK_START_SQR : BLACK_SHORT_ROOK_START_SQR;
             to = new Square(from.rank, from.file - 2);
             _rawMove(from, to);
         }
-        if (move.isCastleLong) {
+        if (ply.isCastleLong) {
             from = isWhiteTurn ? WHITE_LONG_ROOK_START_SQR : BLACK_LONG_ROOK_START_SQR;
             to = new Square(from.rank, from.file + 3);
             _rawMove(from, to);
         }
-        updateWhiteCastleRights(move);
-        updateBlackCastleRights(move);
+        updateWhiteCastleRights(ply);
+        updateBlackCastleRights(ply);
 
-        if (get(move.getTo()) instanceof Pawn) {
-            Pawn pawn = (Pawn) get(move.getTo());
-            if (pawn.isPromotionRank(move.rankTo))
-                switch (move.promotedTo) {
+        if (get(ply.getTo()) instanceof Pawn) {
+            Pawn pawn = (Pawn) get(ply.getTo());
+            if (pawn.isPromotionRank(ply.rankTo))
+                switch (ply.promotedTo) {
                     case QUEEN:
-                        board[move.rankTo][move.fileTo] = new Queen(pawn.isWhite(), move.rankTo, move.fileTo);
+                        board[ply.rankTo][ply.fileTo] = new Queen(pawn.isWhite(), ply.rankTo, ply.fileTo);
                         break;
                     case ROOK:
-                        board[move.rankTo][move.fileTo] = new Rook(pawn.isWhite(), move.rankTo, move.fileTo);
+                        board[ply.rankTo][ply.fileTo] = new Rook(pawn.isWhite(), ply.rankTo, ply.fileTo);
                         break;
                     case BISHOP:
-                        board[move.rankTo][move.fileTo] = new Bishop(pawn.isWhite(), move.rankTo, move.fileTo);
+                        board[ply.rankTo][ply.fileTo] = new Bishop(pawn.isWhite(), ply.rankTo, ply.fileTo);
                         break;
                     case KNIGHT:
-                        board[move.rankTo][move.fileTo] = new Knight(pawn.isWhite(), move.rankTo, move.fileTo);
+                        board[ply.rankTo][ply.fileTo] = new Knight(pawn.isWhite(), ply.rankTo, ply.fileTo);
                         break;
 
                     case NO_PROMOTION:
@@ -261,34 +276,43 @@ public class Board implements Position {
 
         isWhiteTurn = !isWhiteTurn;
 
-        if (isRealBoard) updateAllLegalMoves();
+        if (isRealBoard) {
+            updateAllLegalMoves();
+
+            if (isFiftyMoveBreaker)
+                fiftyMovePlyCounter = 0;
+            else
+                fiftyMovePlyCounter++;
+
+            positionRepetitionCounter.put(this, getPositionRepetitions() + 1);
+        }
     }
 
-    private void updateWhiteCastleRights(Move move) {
-        if (move.getFrom().equals(WHITE_KING_START_SQR)) {
+    private void updateWhiteCastleRights(Ply ply) {
+        if (ply.getFrom().equals(WHITE_KING_START_SQR)) {
             whiteShortCastleRight = false;
             whiteLongCastleRight = false;
         }
-        if (move.getFrom().equals(WHITE_SHORT_ROOK_START_SQR))
+        if (ply.getFrom().equals(WHITE_SHORT_ROOK_START_SQR))
             whiteShortCastleRight = false;
-        if (move.getFrom().equals(WHITE_LONG_ROOK_START_SQR))
+        if (ply.getFrom().equals(WHITE_LONG_ROOK_START_SQR))
             whiteLongCastleRight = false;
     }
 
-    private void updateBlackCastleRights(Move move) {
-        if (move.getFrom().equals(BLACK_KING_START_SQR)) {
+    private void updateBlackCastleRights(Ply ply) {
+        if (ply.getFrom().equals(BLACK_KING_START_SQR)) {
             blackShortCastleRight = false;
             blackLongCastleRight = false;
         }
-        if (move.getFrom().equals(BLACK_SHORT_ROOK_START_SQR))
+        if (ply.getFrom().equals(BLACK_SHORT_ROOK_START_SQR))
             blackShortCastleRight = false;
-        if (move.getFrom().equals(BLACK_LONG_ROOK_START_SQR))
+        if (ply.getFrom().equals(BLACK_LONG_ROOK_START_SQR))
             blackLongCastleRight = false;
     }
 
     public boolean isInCheck(boolean isWhite) {
         Piece myKing = isWhite ? whiteKing : blackKing;
-        for (Move nextMove : getAllMoves(!isWhite)) {
+        for (Ply nextMove : getAllMoves(!isWhite)) {
             if (nextMove.getTo().equals(myKing.getSquare()))
                 return true;
         }
@@ -299,6 +323,12 @@ public class Board implements Position {
         get(from).setSquare(to);
         board[to.rank][to.file] = get(from);
         board[from.rank][from.file] = EP;
+    }
+
+    private int getPositionRepetitions() {
+        if (positionRepetitionCounter.containsKey(this))
+            return positionRepetitionCounter.get(this);
+        return 0;
     }
 
     @Override
@@ -314,8 +344,8 @@ public class Board implements Position {
         return board[rank][file];
     }
 
-    public List<Move> getAllMoves(boolean isWhite) {
-        List<Move> moves = new ArrayList<>();
+    public List<Ply> getAllMoves(boolean isWhite) {
+        List<Ply> moves = new ArrayList<>();
         for (Piece[] rank : board)
             for (Piece piece : rank)
                 if (isOfColor(isWhite, piece))
@@ -323,39 +353,40 @@ public class Board implements Position {
         return moves;
     }
 
-    private boolean _isLegal(Move move) {
-        _move(move);
+    private boolean _isLegal(Ply ply) {
+        _move(ply);
         return !isInCheck(!isWhiteTurn);
     }
 
-    public boolean isLegal(Move move) {
+    public boolean isLegal(Ply ply) {
         Board copy = new Board(this);
-        return copy._isLegal(move);
+        return copy._isLegal(ply);
     }
 
     private void updateAllLegalMoves() {
-        List<Move> moves = new ArrayList<>();
-        for (Move move : getAllMoves(isWhiteTurn)) {
-            if (isLegal(move))
-                moves.add(move);
+        List<Ply> moves = new ArrayList<>();
+        for (Ply ply : getAllMoves(isWhiteTurn)) {
+            if (isLegal(ply))
+                moves.add(ply);
         }
-        allLegalMoves = moves;
+        allLegalPlies = moves;
     }
 
     @Override
-    public List<Move> getAllLegalMoves() {
-        return allLegalMoves;
+    public List<Ply> getAllLegalPlies() {
+        return allLegalPlies;
     }
 
     public boolean isGameOver() {
-        return allLegalMoves.size() == 0;
+        return allLegalPlies.size() == 0 || fiftyMovePlyCounter >= 100;
     }
 
     @Override
     public Result getResult() {
-        if (!isGameOver())
+        if (!isGameOver()) {
             return Result.PLAYING;
-        if (!isInCheck(isWhiteTurn()))
+        }
+        if (!isInCheck(isWhiteTurn()) || fiftyMovePlyCounter >= 100)
             return Result.DRAW;
         if (isWhiteTurn())
             return Result.BLACK_VICTORY;
@@ -373,6 +404,28 @@ public class Board implements Position {
 
     public static boolean isOfColor(boolean isWhite, Piece p) {
         return isWhite ? p.isWhite() : p.isBlack();
+    }
+
+    private boolean arePieceEqual(Board other) {
+        for (int rank = 0; rank < 8; rank++)
+            for (int file = 0; file < 8; file++)
+                if (!this.board[rank][file].equals(other.board[rank][file]))
+                    return false;
+        return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Board))
+            return false;
+        Board other = (Board) o;
+        return this.arePieceEqual(other) &&
+                this.isWhiteTurn == other.isWhiteTurn &&
+                this.enPassant.equals(other.enPassant) &&
+                this.whiteShortCastleRight == other.whiteShortCastleRight &&
+                this.whiteLongCastleRight == other.whiteLongCastleRight &&
+                this.blackShortCastleRight == other.blackShortCastleRight &&
+                this.blackLongCastleRight == other.blackLongCastleRight;
     }
 
     @Override

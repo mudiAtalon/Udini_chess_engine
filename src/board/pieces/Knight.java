@@ -1,9 +1,8 @@
 package board.pieces;
 
 import board.Board;
-import board.Move;
+import board.Ply;
 import board.Square;
-import com.sun.xml.internal.bind.v2.WellKnownNamespace;
 
 import java.util.*;
 
@@ -22,8 +21,8 @@ public class Knight extends Piece {
     }
 
     @Override
-    public List<Move> moves(Board board) {
-        List<Move> ret = new ArrayList<>();
+    public List<Ply> moves(Board board) {
+        List<Ply> ret = new ArrayList<>();
         addStep(ret, board, 2, 1);
         addStep(ret, board, -2, 1);
         addStep(ret, board, 2, -1);

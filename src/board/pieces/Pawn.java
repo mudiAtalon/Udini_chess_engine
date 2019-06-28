@@ -29,40 +29,40 @@ public class Pawn extends Piece {
         return (isWhite && rank == 7) || (!isWhite && rank == 0);
     }
 
-    private void addMoveToList(Move move, List<Move> list) {
-        if (isPromotionRank(move.rankTo)) {
-            Square from = move.getFrom(), to = move.getTo();
-            list.add(new Move(from, to, Move.Promotion.QUEEN));
-            list.add(new Move(from, to, Move.Promotion.ROOK));
-            list.add(new Move(from, to, Move.Promotion.BISHOP));
-            list.add(new Move(from, to, Move.Promotion.KNIGHT));
+    private void addMoveToList(Ply ply, List<Ply> list) {
+        if (isPromotionRank(ply.rankTo)) {
+            Square from = ply.getFrom(), to = ply.getTo();
+            list.add(new Ply(from, to, Ply.Promotion.QUEEN));
+            list.add(new Ply(from, to, Ply.Promotion.ROOK));
+            list.add(new Ply(from, to, Ply.Promotion.BISHOP));
+            list.add(new Ply(from, to, Ply.Promotion.KNIGHT));
         } else
-            list.add(move);
+            list.add(ply);
     }
 
     @Override
-    public List<Move> moves(Board board) {
-        List<Move> ret = new ArrayList<>();
+    public List<Ply> moves(Board board) {
+        List<Ply> ret = new ArrayList<>();
         int rankDiff = isWhite ? 1 : -1;
 
         int fileDiff = -1;
         Square to = new Square(square.rank + rankDiff, square.file + fileDiff);
         if (Board.isOnBoard(to)) {
             if (isEnemy(board.get(to)))
-                addMoveToList(new Move(square, to), ret);
+                addMoveToList(new Ply(square, to), ret);
             if (to.equals(board.getEnPassant()))
-                addMoveToList(new Move(square, to, false, true), ret);
+                addMoveToList(new Ply(square, to, false, true), ret);
         }
 
         fileDiff = 0;
         to = new Square(square.rank + rankDiff, square.file + fileDiff);
         if (Board.isOnBoard(to) && board.get(to).isEmpty()) {
-            addMoveToList(new Move(square, to), ret);
+            addMoveToList(new Ply(square, to), ret);
 
             if (hasNotMoved()) {
                 to = new Square(to.rank + rankDiff, to.file);
                 if (board.get(to).isEmpty())
-                    addMoveToList(new Move(square, to, true), ret);
+                    addMoveToList(new Ply(square, to, true), ret);
             }
 
         }
@@ -71,9 +71,9 @@ public class Pawn extends Piece {
         to = new Square(square.rank + rankDiff, square.file + fileDiff);
         if (Board.isOnBoard(to)) {
             if (isEnemy(board.get(to)))
-                addMoveToList(new Move(square, to), ret);
+                addMoveToList(new Ply(square, to), ret);
             if (to.equals(board.getEnPassant()))
-                addMoveToList(new Move(square, to, false, true), ret);
+                addMoveToList(new Ply(square, to, false, true), ret);
         }
 
         return ret;

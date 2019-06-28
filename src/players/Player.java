@@ -1,8 +1,8 @@
 package players;
 
-import board.Move;
+import board.Ply;
 
 public interface Player {
 
-    Move getChosenMove(Position pos);
+    Ply getChosenMove(Position pos);
 }
