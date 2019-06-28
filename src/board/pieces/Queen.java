@@ -9,7 +9,7 @@ import java.util.*;
 public class Queen extends Piece {
 
     public Queen(boolean isWhite, Square square) {
-        super(isWhite, square, isWhite ? '\u2655' : '\u265b');
+        super(isWhite, square, isWhite ? PieceType.WHITE_QUEEN : PieceType.BLACK_QUEEN);
     }
 
     public Queen(boolean isWhite, int rank, int file) {

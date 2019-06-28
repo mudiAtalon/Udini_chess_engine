@@ -20,6 +20,8 @@ public class Square {
 
     @Override
     public boolean equals(Object o){
+        if(o == null)
+            return false;
         if(!(o instanceof Square))
             return false;
         Square other = (Square)o;

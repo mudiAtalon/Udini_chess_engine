@@ -3,13 +3,14 @@ package board.pieces;
 import board.Board;
 import board.Move;
 import board.Square;
+import com.sun.xml.internal.bind.v2.WellKnownNamespace;
 
 import java.util.*;
 
 public class Knight extends Piece {
 
     public Knight(boolean isWhite, Square square) {
-        super(isWhite, square, isWhite ? '\u2658' : '\u265e');
+        super(isWhite, square, isWhite ? PieceType.WHITE_KNIGHT : PieceType.BLACK_KNIGHT);
     }
 
     public Knight(boolean isWhite, int rank, int file) {

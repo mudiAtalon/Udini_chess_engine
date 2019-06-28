@@ -7,7 +7,7 @@ import java.util.*;
 public class Pawn extends Piece {
 
     public Pawn(boolean isWhite, Square square) {
-        super(isWhite, square, isWhite ? '\u2659' : '\u265f');
+        super(isWhite, square, isWhite ? PieceType.WHITE_PAWN : PieceType.BLACK_PAWN);
     }
 
     public Pawn(boolean isWhite, int rank, int file) {

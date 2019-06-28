@@ -15,7 +15,7 @@ public class EmptyPiece extends Piece {
     }
 
     private EmptyPiece() {
-        super(true, -1, -1, '\u2001');
+        super(true, -1, -1, PieceType.EMPTY_PIECE);
     }
 
     @Override

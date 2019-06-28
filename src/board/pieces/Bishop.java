@@ -9,7 +9,7 @@ import java.util.*;
 public class Bishop extends Piece {
 
     public Bishop(boolean isWhite, Square square) {
-        super(isWhite, square, isWhite ? '\u2657' : '\u265d');
+        super(isWhite, square, isWhite ? PieceType.WHITE_BISHOP : PieceType.BLACK_BISHOP);
     }
 
     public Bishop(boolean isWhite, int rank, int file) {

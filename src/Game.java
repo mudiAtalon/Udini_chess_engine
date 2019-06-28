@@ -1,4 +1,8 @@
-package board;
+import board.Board;
+import players.CommandLinePlayer;
+import players.FirstMovePlayer;
+import board.Move;
+import players.Player;
 
 public class Game {
 
@@ -10,21 +14,23 @@ public class Game {
     private Board board;
     private Player white, black;
 
-    private Game(Player white, Player black){
+    private Game(Player white, Player black) {
         this.white = white;
         this.black = black;
         this.board = new Board();
     }
 
-    private Board.Result play(){
+    private Board.Result play() {
+        System.out.println(board);
 
-        for(Player current = white, next = black, swaper;
-                !board.isGameOver();
-                swaper = current, current = next, next = swaper){
+        for (Player current = white, next = black, swaper;
+             !board.isGameOver();
+             swaper = current, current = next, next = swaper) {
+
             Move move = current.getChosenMove(board);
             board.move(move);
-            if(board.isGameOver()) {
-                System.out.println(board);
+            System.out.println(board);
+            if (board.isGameOver()) {
                 return board.getResult();
             }
         }
@@ -33,8 +39,8 @@ public class Game {
 
     public static void main(String[] args) {
         Player white = new FirstMovePlayer(),
-                black = new FirstMovePlayer();
-        Board.Result result = playGame(white ,black);
+                black = new CommandLinePlayer();
+        Board.Result result = playGame(white, black);
         System.out.println(result);
     }
 

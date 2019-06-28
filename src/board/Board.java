@@ -5,6 +5,7 @@ import board.pieces.Piece;
 import java.util.*;
 
 import board.pieces.*;
+import players.Position;
 
 public class Board implements Position {
 
@@ -127,6 +128,11 @@ public class Board implements Position {
     public Square getEnPassant() {
         if (enPassant == null) return null;
         return enPassant.copy();
+    }
+
+    @Override
+    public boolean isEnPassantSquare(Square square) {
+        return square.equals(enPassant);
     }
 
     private boolean canCastle(boolean isWhite, boolean isShort) {
@@ -295,6 +301,11 @@ public class Board implements Position {
         board[from.rank][from.file] = EP;
     }
 
+    @Override
+    public boolean isPawn(Square square) {
+        return get(square) instanceof Pawn;
+    }
+
     public Piece get(Square square) {
         return board[square.rank][square.file];
     }
@@ -373,7 +384,7 @@ public class Board implements Position {
             }
             ret.append(System.lineSeparator());
         }
-        ret.append(System.lineSeparator());
+        ret.append((isWhiteTurn ? "white" : "black") + " to play" + System.lineSeparator());
         return ret.toString();
     }
 }

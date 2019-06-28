@@ -9,20 +9,41 @@ import java.util.*;
 public abstract class Piece {
     protected final boolean isWhite;
     protected Square square;
-    private final char c;
+    public final PieceType pieceType;
 
-    public Piece(boolean isWhite, Square square, char c) {
-        this.isWhite = isWhite;
-        this.square = square;
-        this.c = c;
+    public enum PieceType{
+        WHITE_KING('\u2654'), BLACK_KING('\u265a'),
+        WHITE_QUEEN('\u2655'), BLACK_QUEEN('\u265b'),
+        WHITE_ROOK('\u2656'), BLACK_ROOK('\u265c'),
+        WHITE_BISHOP('\u2657'), BLACK_BISHOP('\u265d'),
+        WHITE_KNIGHT('\u2658'), BLACK_KNIGHT('\u265e'),
+        WHITE_PAWN('\u2659'), BLACK_PAWN('\u265f'),
+        EMPTY_PIECE('\u2001');
+
+        final char c;
+
+        PieceType(char c){
+            this.c=c;
+        }
+
+        @Override
+        public String toString(){
+            return c+"";
+        }
     }
 
-    public Piece(boolean isWhite, int rank, int file, char c) {
-        this(isWhite, new Square(rank, file), c);
+    public Piece(boolean isWhite, Square square, PieceType pieceType) {
+        this.isWhite = isWhite;
+        this.square = square;
+        this.pieceType = pieceType;
+    }
+
+    public Piece(boolean isWhite, int rank, int file, PieceType pieceType) {
+        this(isWhite, new Square(rank, file), pieceType);
     }
 
     public Piece(Piece other){
-        this(other.isWhite, other.square, other.c);
+        this(other.isWhite, other.square, other.pieceType);
     }
 
     public boolean isWhite() {
@@ -74,35 +95,35 @@ public abstract class Piece {
 
     @Override
     public Piece clone(){
-        switch (c){
-            case '\u2654':
-            case '\u265a':
+        switch (pieceType){
+            case WHITE_KING:
+            case BLACK_KING:
                 return new King(this);
-            case '\u2655':
-            case '\u265b':
+            case WHITE_QUEEN:
+            case BLACK_QUEEN:
                 return new Queen(this);
-            case '\u2656':
-            case '\u265c':
+            case WHITE_ROOK:
+            case BLACK_ROOK:
                 return new Rook(this);
-            case '\u2657':
-            case '\u265d':
+            case WHITE_BISHOP:
+            case BLACK_BISHOP:
                 return new Bishop(this);
-            case '\u2658':
-            case '\u265e':
+            case WHITE_KNIGHT:
+            case BLACK_KNIGHT:
                 return new Knight(this);
-            case '\u2659':
-            case '\u265f':
+            case WHITE_PAWN:
+            case BLACK_PAWN:
                 return new Pawn(this);
-            case '\u2001':
+            case EMPTY_PIECE:
                 return this;
             default:
-                throw new IllegalArgumentException("wow, a new piece");
+                throw new IllegalArgumentException("wow, a new piece!");
         }
     }
 
     @Override
     public String toString() {
-        return c + " ";
+        return pieceType + " ";
     }
 
 }

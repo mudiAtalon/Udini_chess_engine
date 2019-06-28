@@ -9,7 +9,7 @@ import java.util.*;
 public class King extends Piece {
 
     public King(boolean isWhite, Square square) {
-        super(isWhite, square, isWhite ? '\u2654' : '\u265a');
+        super(isWhite, square, isWhite ?  PieceType.WHITE_KING: PieceType.BLACK_KING);
     }
 
     public King(boolean isWhite, int rank, int file) {

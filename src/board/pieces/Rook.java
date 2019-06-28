@@ -9,7 +9,7 @@ import java.util.*;
 public class Rook extends Piece {
 
     public Rook(boolean isWhite, Square square) {
-        super(isWhite, square, isWhite ? '\u2656' : '\u265c');
+        super(isWhite, square, isWhite ? PieceType.WHITE_ROOK : PieceType.BLACK_ROOK);
     }
 
     public Rook(boolean isWhite, int rank, int file) {
