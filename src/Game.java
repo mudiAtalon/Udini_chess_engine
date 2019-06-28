@@ -38,7 +38,7 @@ public class Game {
     }
 
     public static void main(String[] args) {
-        Player white = new FirstMovePlayer(),
+        Player white = new CommandLinePlayer(),
                 black = new CommandLinePlayer();
         Board.Result result = playGame(white, black);
         System.out.println(result);

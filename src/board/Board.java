@@ -9,12 +9,12 @@ import players.Position;
 
 public class Board implements Position {
 
-    private static final Square WHITE_SHORT_ROOK_START_SQR = new Square(7, 7),
-            WHITE_LONG_ROOK_START_SQR = new Square(7, 0),
-            WHITE_KING_START_SQR = new Square(7, 4),
-            BLACK_SHORT_ROOK_START_SQR = new Square(0, 7),
-            BLACK_LONG_ROOK_START_SQR = new Square(0, 0),
-            BLACK_KING_START_SQR = new Square(0, 4);
+    private static final Square WHITE_SHORT_ROOK_START_SQR = new Square(0, 7),
+            WHITE_LONG_ROOK_START_SQR = new Square(0, 0),
+            WHITE_KING_START_SQR = new Square(0, 4),
+            BLACK_SHORT_ROOK_START_SQR = new Square(7, 7),
+            BLACK_LONG_ROOK_START_SQR = new Square(7, 0),
+            BLACK_KING_START_SQR = new Square(7, 4);
 
     private final boolean isRealBoard;
 
@@ -50,35 +50,35 @@ public class Board implements Position {
 
         isWhiteTurn = true;
 
-        whiteKing = new King(true, 7, 4);
-        blackKing = new King(false, 0, 4);
+        whiteKing = new King(true, 0, 4);
+        blackKing = new King(false, 7, 4);
 
-        board[0][0] = new Rook(false, 0, 0);
-        board[0][1] = new Knight(false, 0, 1);
-        board[0][2] = new Bishop(false, 0, 2);
-        board[0][3] = new Queen(false, 0, 3);
-        board[0][4] = blackKing;
-        board[0][5] = new Bishop(false, 0, 5);
-        board[0][6] = new Knight(false, 0, 6);
-        board[0][7] = new Rook(false, 0, 7);
+        board[0][0] = new Rook(true, 0, 0);
+        board[0][1] = new Knight(true, 0, 1);
+        board[0][2] = new Bishop(true, 0, 2);
+        board[0][3] = new Queen(true, 0, 3);
+        board[0][4] = whiteKing;
+        board[0][5] = new Bishop(true, 0, 5);
+        board[0][6] = new Knight(true, 0, 6);
+        board[0][7] = new Rook(true, 0, 7);
         for (int file = 0; file < 8; file++) {
-            board[1][file] = new Pawn(false, 1, file);
+            board[1][file] = new Pawn(true, 1, file);
         }
         for (int rank = 2; rank < 6; rank++)
             for (int file = 0; file < 8; file++) {
                 board[rank][file] = EP;
             }
         for (int file = 0; file < 8; file++) {
-            board[6][file] = new Pawn(true, 6, file);
+            board[6][file] = new Pawn(false, 6, file);
         }
-        board[7][0] = new Rook(true, 7, 0);
-        board[7][1] = new Knight(true, 7, 1);
-        board[7][2] = new Bishop(true, 7, 2);
-        board[7][3] = new Queen(true, 7, 3);
-        board[7][4] = whiteKing;
-        board[7][5] = new Bishop(true, 7, 5);
-        board[7][6] = new Knight(true, 7, 6);
-        board[7][7] = new Rook(true, 7, 7);
+        board[7][0] = new Rook(false, 7, 0);
+        board[7][1] = new Knight(false, 7, 1);
+        board[7][2] = new Bishop(false, 7, 2);
+        board[7][3] = new Queen(false, 7, 3);
+        board[7][4] = blackKing;
+        board[7][5] = new Bishop(false, 7, 5);
+        board[7][6] = new Knight(false, 7, 6);
+        board[7][7] = new Rook(false, 7, 7);
 
         result = Result.PLAYING;
 
@@ -157,13 +157,13 @@ public class Board implements Position {
 
     private List<Move> castleMovesWhite() {
         List<Move> ret = new ArrayList<>();
-        Square from = new Square(7, 4);
+        Square from = new Square(0, 4);
         if (whiteShortCastleRight && canCastle(true, true)) {
-            Square to = new Square(7, 6);
+            Square to = new Square(0, 6);
             ret.add(new Move(from, to, false, false, true, false));
         }
         if (whiteLongCastleRight && canCastle(true, false)) {
-            Square to = new Square(7, 2);
+            Square to = new Square(0, 2);
             ret.add(new Move(from, to, false, false, false, true));
         }
         return ret;
@@ -171,13 +171,13 @@ public class Board implements Position {
 
     private List<Move> castleMovesBlack() {
         List<Move> ret = new ArrayList<>();
-        Square from = new Square(0, 4);
+        Square from = new Square(7, 4);
         if (blackShortCastleRight && canCastle(false, true)) {
-            Square to = new Square(0, 6);
+            Square to = new Square(7, 6);
             ret.add(new Move(from, to, false, false, true, false));
         }
         if (blackLongCastleRight && canCastle(false, false)) {
-            Square to = new Square(0, 2);
+            Square to = new Square(7, 2);
             ret.add(new Move(from, to, false, false, false, true));
         }
         return ret;
@@ -218,10 +218,10 @@ public class Board implements Position {
 
         enPassant = null;
         if (move.isPawnJump) {
-            enPassant = new Square(to.rank + (isWhiteTurn ? 1 : -1), to.file);
+            enPassant = new Square(to.rank + (isWhiteTurn ? -1 : 1), to.file);
         }
         if (move.isEnPassant) {
-            int jumpedPawnRank = to.rank + (isWhiteTurn ? 1 : -1);
+            int jumpedPawnRank = to.rank + (isWhiteTurn ? -1 : 1);
             board[jumpedPawnRank][to.file] = EP;
         }
         if (move.isCastleShort) {
@@ -261,7 +261,7 @@ public class Board implements Position {
 
         isWhiteTurn = !isWhiteTurn;
 
-        if(isRealBoard) updateAllLegalMoves();
+        if (isRealBoard) updateAllLegalMoves();
     }
 
     private void updateWhiteCastleRights(Move move) {
@@ -378,7 +378,7 @@ public class Board implements Position {
     @Override
     public String toString() {
         StringBuilder ret = new StringBuilder();
-        for (int rank = 0; rank < 8; rank++) {
+        for (int rank = 7; rank >= 0; rank--) {
             for (int file = 0; file < 8; file++) {
                 ret.append(board[rank][file]);
             }

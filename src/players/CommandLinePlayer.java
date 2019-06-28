@@ -17,7 +17,6 @@ public class CommandLinePlayer implements Player {
 
     @Override
     public Move getChosenMove(Position pos) {
-
         if(isCastleFromUser("do you want to castle? (true/false)")){
             return getCastleMove(pos.isWhiteTurn(), isShortCastleFromUser("castle short? (true/false)"));
         }
@@ -64,7 +63,7 @@ public class CommandLinePlayer implements Player {
         if (charRank < 49 || charRank >= 57)
             throw new IllegalArgumentException("not a square");
 
-        int rank = 8 - (charRank - 48), file = charFile - 97;
+        int rank = charRank - '1', file = charFile -'a';
         return new Square(rank, file);
     }
 
@@ -103,17 +102,17 @@ public class CommandLinePlayer implements Player {
     private boolean isPromotion(Position pos, Square from, Square to) {
         if (pos.isWhiteTurn())
             return (pos.isPawn(from))
-                    && to.rank == 0;
+                    && to.rank == 7;
         else
             return (pos.isPawn(from))
-                    && to.rank == 7;
+                    && to.rank == 0;
     }
 
     private boolean isPawnJump(Position pos, Square from, Square to){
         if(pos.isWhiteTurn())
-            return from.rank == 6 && to.rank == 4 && pos.isPawn(from);
-        else
             return from.rank == 1 && to.rank == 3 && pos.isPawn(from);
+        else
+            return from.rank == 6 && to.rank == 4 && pos.isPawn(from);
 
     }
 

@@ -2,10 +2,10 @@ package board;
 
 public class Move {
 
-    public static final Move WHITE_SHORT_CASTLE = new Move(7, 4, 7, 6, Promotion.NO_PROMOTION, false, false, true, false),
-            WHITE_LONG_CASTLE = new Move(7, 4, 7, 2, Promotion.NO_PROMOTION, false, false, true, false),
-            BLACK_SHORT_CASTLE = new Move(0, 4, 0, 6, Promotion.NO_PROMOTION, false, false, true, false),
-            BLACK_LONG_CASTLE = new Move(0, 4, 0, 2, Promotion.NO_PROMOTION, false, false, true, false);
+    public static final Move WHITE_SHORT_CASTLE = new Move(0, 4, 0, 6, Promotion.NO_PROMOTION, false, false, true, false),
+            WHITE_LONG_CASTLE = new Move(0, 4, 0, 2, Promotion.NO_PROMOTION, false, false, true, false),
+            BLACK_SHORT_CASTLE = new Move(7, 4, 7, 6, Promotion.NO_PROMOTION, false, false, true, false),
+            BLACK_LONG_CASTLE = new Move(7, 4, 7, 2, Promotion.NO_PROMOTION, false, false, true, false);
 
     public final int rankFrom, fileFrom, rankTo, fileTo;
     public final boolean isPawnJump, isEnPassant;
