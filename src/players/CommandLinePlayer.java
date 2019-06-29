@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class CommandLinePlayer implements Player {
 
-    Scanner input;
+    private Scanner input;
 
     public CommandLinePlayer() {
         input = new Scanner(System.in);
@@ -15,15 +15,23 @@ public class CommandLinePlayer implements Player {
 
     @Override
     public Ply getChosenMove(Position pos) {
-        if (isCastleFromUser("do you want to castle? (true/false)")) {
-            return getCastleMove(pos.isWhiteTurn(), isShortCastleFromUser("castle short? (true/false)"));
-        }
+        String line = input.nextLine();
+        if (line.equals("o-o"))
+            if (pos.isWhiteTurn())
+                return Ply.WHITE_SHORT_CASTLE;
+            else
+                return Ply.BLACK_SHORT_CASTLE;
+        if (line.equals("o-o-o"))
+            if (pos.isWhiteTurn())
+                return Ply.WHITE_LONG_CASTLE;
+            else
+                return Ply.BLACK_LONG_CASTLE;
 
-        Square from = getSquareFromUser("enter origin square"),
-                to = getSquareFromUser("enter destination square");
+        Square from = getSquareFromString(line.substring(0, 2)),
+                to = getSquareFromString(line.substring(3, 5));
 
         if (isPromotion(pos, from, to)) {
-            Ply.Promotion promotion = getPromotionFromUser("promote to a:");
+            Ply.Promotion promotion = getPromotionFromString(line.substring(6));
             return new Ply(from, to, promotion);
         }
 
@@ -36,38 +44,18 @@ public class CommandLinePlayer implements Player {
         return new Ply(from, to);
     }
 
-    private boolean isCastleFromUser(String message) {
-        System.out.println(message);
-        if (!input.hasNextBoolean())
-            throw new IllegalArgumentException("not a boolean");
-        return input.nextBoolean();
-    }
-
-    private boolean isShortCastleFromUser(String message) {
-        System.out.println(message);
-        if (!input.hasNextBoolean())
-            throw new IllegalArgumentException("not a boolean");
-        return input.nextBoolean();
-    }
-
-    private Square getSquareFromUser(String message) {
-        System.out.println(message);
-        String strSqr = input.next();
-        if (strSqr.length() != 2)
-            throw new IllegalArgumentException("not a square");
+    private Square getSquareFromString(String strSqr) {
         char charFile = strSqr.charAt(0), charRank = strSqr.charAt(1);
         if ((charFile < 65 || charFile >= 73) && (charFile < 97 || charFile >= 105))
-            throw new IllegalArgumentException("not a square");
+            throw new IllegalArgumentException(strSqr + "is not a square");
         if (charRank < 49 || charRank >= 57)
-            throw new IllegalArgumentException("not a square");
+            throw new IllegalArgumentException(strSqr + "is not a square");
 
         int rank = charRank - '1', file = charFile - 'a';
         return new Square(rank, file);
     }
 
-    private Ply.Promotion getPromotionFromUser(String message) {
-        System.out.println(message);
-        String strPieceType = input.next().toLowerCase();
+    private Ply.Promotion getPromotionFromString(String strPieceType) {
         switch (strPieceType) {
             case "queen":
                 return Ply.Promotion.QUEEN;
@@ -79,20 +67,6 @@ public class CommandLinePlayer implements Player {
                 return Ply.Promotion.KNIGHT;
             default:
                 throw new IllegalArgumentException("can't promote to that");
-        }
-    }
-
-    private Ply getCastleMove(boolean isWhite, boolean isShort) {
-        if (isShort) {
-            if (isWhite)
-                return Ply.WHITE_SHORT_CASTLE;
-            else
-                return Ply.BLACK_SHORT_CASTLE;
-        } else {
-            if (isWhite)
-                return Ply.WHITE_LONG_CASTLE;
-            else
-                return Ply.BLACK_SHORT_CASTLE;
         }
     }
 

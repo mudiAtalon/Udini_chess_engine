@@ -2,42 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f364fdf4-ae4d-4d9e-af5b-143c2cdf202f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Udini_chess_engine/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Udini_chess_engine/Game.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/Board$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/Board$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/Board$Result.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/Board$Result.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/Board.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/Board.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/Move$Promotion.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/Move.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/pieces/Bishop.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/pieces/Bishop.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/pieces/EmptyPiece.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/pieces/EmptyPiece.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/pieces/King.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/pieces/King.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/pieces/Knight.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/pieces/Knight.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/pieces/Pawn.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/pieces/Pawn.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/pieces/Piece.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/pieces/Piece.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/pieces/Queen.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/pieces/Queen.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/pieces/Rook.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Udini_chess_engine/board/pieces/Rook.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Udini_chess_engine/players/CommandLinePlayer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Udini_chess_engine/players/CommandLinePlayer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Udini_chess_engine/players/FirstMovePlayer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Udini_chess_engine/players/FirstMovePlayer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Udini_chess_engine/players/MoveListPlayer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Udini_chess_engine/players/MoveListPlayer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Udini_chess_engine/players/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Udini_chess_engine/players/Player.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Udini_chess_engine/players/Position.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Udini_chess_engine/players/Position.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/Board.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/Move.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/Ply.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/pieces/Bishop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/pieces/Bishop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/pieces/EmptyPiece.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/pieces/EmptyPiece.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/pieces/King.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/pieces/King.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/pieces/Knight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/pieces/Knight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/pieces/Pawn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/pieces/Pawn.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/pieces/Piece.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/pieces/Piece.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/pieces/Queen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/pieces/Queen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/board/pieces/Rook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/board/pieces/Rook.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/players/CommandLinePlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/players/CommandLinePlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/players/FirstMovePlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/players/FirstMovePlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/players/MoveListPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/players/MoveListPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/players/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/players/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/players/Position.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/players/Position.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -69,11 +35,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/board/Board.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="257">
-              <caret line="427" column="71" selection-start-line="427" selection-start-column="71" selection-end-line="427" selection-end-column="71" />
+              <caret line="427" column="68" lean-forward="true" selection-start-line="427" selection-start-column="68" selection-end-line="427" selection-end-column="68" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#958#1060#0" />
@@ -117,13 +83,31 @@
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/players/CommandLinePlayer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="119">
+              <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+              <folding>
+                <element signature="method#getChosenMove#0;class#CommandLinePlayer#0" />
+                <element signature="method#getSquareFromUser#0;class#CommandLinePlayer#0" />
+                <element signature="method#getPromotionFromUser#0;class#CommandLinePlayer#0" />
+                <element signature="method#isPromotion#0;class#CommandLinePlayer#0" />
+                <element signature="method#isPawnJump#0;class#CommandLinePlayer#0" />
+                <element signature="method#isEnPassant#0;class#CommandLinePlayer#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Game.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="316">
-              <caret line="35" column="28" lean-forward="true" selection-start-line="35" selection-start-column="28" selection-end-line="35" selection-end-column="28" />
+            <state relative-caret-position="526">
+              <caret line="51" column="47" selection-start-line="51" selection-start-column="47" selection-end-line="51" selection-end-column="47" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <marker date="1561765303987" expanded="true" signature="1124:1654" ph="..." />
               </folding>
             </state>
           </provider>
@@ -218,13 +202,13 @@
         <option value="$PROJECT_DIR$/src/players/FirstMovePlayer.java" />
         <option value="$PROJECT_DIR$/src/players/Player.java" />
         <option value="$PROJECT_DIR$/src/board/pieces/Pawn.java" />
-        <option value="$PROJECT_DIR$/src/players/CommandLinePlayer.java" />
         <option value="$PROJECT_DIR$/src/board/Move.java" />
         <option value="$PROJECT_DIR$/src/board/Ply.java" />
-        <option value="$PROJECT_DIR$/src/Game.java" />
         <option value="$PROJECT_DIR$/src/players/MoveListPlayer.java" />
         <option value="$PROJECT_DIR$/src/board/pieces/Piece.java" />
         <option value="$PROJECT_DIR$/src/board/Board.java" />
+        <option value="$PROJECT_DIR$/src/Game.java" />
+        <option value="$PROJECT_DIR$/src/players/CommandLinePlayer.java" />
       </list>
     </option>
   </component>
@@ -360,7 +344,7 @@
     <frame x="-8" y="-8" width="1040" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24795918" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24795918" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -369,7 +353,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3289689" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.27332243" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.41734862" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.46153846" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -585,31 +569,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Game.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="35" column="28" lean-forward="true" selection-start-line="35" selection-start-column="28" selection-end-line="35" selection-end-column="28" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/players/CommandLinePlayer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding>
-            <element signature="method#isCastleFromUser#0;class#CommandLinePlayer#0" />
-            <element signature="method#isShortCastleFromUser#0;class#CommandLinePlayer#0" />
-            <element signature="method#getSquareFromUser#0;class#CommandLinePlayer#0" />
-            <element signature="method#getPromotionFromUser#0;class#CommandLinePlayer#0" />
-            <element signature="method#getCastleMove#0;class#CommandLinePlayer#0" />
-            <element signature="method#isPromotion#0;class#CommandLinePlayer#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/players/MoveListPlayer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="408">
@@ -639,7 +598,7 @@
     <entry file="file://$PROJECT_DIR$/src/board/Board.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="257">
-          <caret line="427" column="71" selection-start-line="427" selection-start-column="71" selection-end-line="427" selection-end-column="71" />
+          <caret line="427" column="68" lean-forward="true" selection-start-line="427" selection-start-column="68" selection-end-line="427" selection-end-column="68" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#958#1060#0" />
@@ -678,6 +637,32 @@
             <element signature="e#12753#12754#0" expanded="true" />
             <element signature="e#12876#12877#0" expanded="true" />
             <element signature="e#11783#12170#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Game.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="526">
+          <caret line="51" column="47" selection-start-line="51" selection-start-column="47" selection-end-line="51" selection-end-column="47" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <marker date="1561765303987" expanded="true" signature="1124:1654" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/players/CommandLinePlayer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+          <folding>
+            <element signature="method#getChosenMove#0;class#CommandLinePlayer#0" />
+            <element signature="method#getSquareFromUser#0;class#CommandLinePlayer#0" />
+            <element signature="method#getPromotionFromUser#0;class#CommandLinePlayer#0" />
+            <element signature="method#isPromotion#0;class#CommandLinePlayer#0" />
+            <element signature="method#isPawnJump#0;class#CommandLinePlayer#0" />
+            <element signature="method#isEnPassant#0;class#CommandLinePlayer#0" />
           </folding>
         </state>
       </provider>

@@ -41,15 +41,15 @@ public class Game {
     }
 
     public static void main(String[] args) {
-        List<Ply> whiteMoves = new ArrayList<>(), blackMoves = new ArrayList<>();
-        for(int iter = 0; iter<100; iter++){
-            whiteMoves.add(new Ply(0, 6, 2, 5));
-            blackMoves.add(new Ply(7, 1, 5, 2));
-            whiteMoves.add(new Ply(2, 5, 0, 6));
-            blackMoves.add(new Ply(5, 2, 7, 1));
-        }
-        Player white = new MoveListPlayer(whiteMoves),
-                black = new MoveListPlayer(blackMoves);
+//        List<Ply> whiteMoves = new ArrayList<>(), blackMoves = new ArrayList<>();
+//        for(int iter = 0; iter<100; iter++){
+//            whiteMoves.add(new Ply(0, 6, 2, 5));
+//            blackMoves.add(new Ply(7, 1, 5, 2));
+//            whiteMoves.add(new Ply(2, 5, 0, 6));
+//            blackMoves.add(new Ply(5, 2, 7, 1));
+//        }
+        Player white = new CommandLinePlayer(),
+                black = new CommandLinePlayer();
         Board.Result result = playGame(white, black);
         System.out.println(result);
     }
