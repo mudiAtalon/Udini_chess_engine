@@ -18,6 +18,11 @@ public class Square {
         return new Square(this);
     }
 
+    public static Square copy(Square square){
+        if(square == null) return null;
+        return square.copy();
+    }
+
     @Override
     public boolean equals(Object o){
         if(o == null)

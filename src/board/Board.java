@@ -16,7 +16,7 @@ public class Board implements Position {
             BLACK_LONG_ROOK_START_SQR = new Square(7, 0),
             BLACK_KING_START_SQR = new Square(7, 4);
 
-    private final boolean isRealBoard;
+    private final boolean isVirtualBoard;
 
     private final Piece[][] board = new Piece[8][8];
     private EmptyPiece EP;
@@ -31,7 +31,7 @@ public class Board implements Position {
     private List<Ply> allLegalPlies;
 
     private int fiftyMovePlyCounter;
-    private Map<Board, Integer> positionRepetitionCounter;
+//    private Map<Board, Integer> positionRepetitionCounter;
 
     private Result result;
 
@@ -86,18 +86,20 @@ public class Board implements Position {
         result = Result.PLAYING;
 
         fiftyMovePlyCounter = 0;
-        positionRepetitionCounter = new HashMap<>();
-        positionRepetitionCounter.put(this, 1);
+//        positionRepetitionCounter = new HashMap<>();
+//        positionRepetitionCounter.put(this, 1);
 
-        isRealBoard = true;
+        isVirtualBoard = false;
 
-        updateAllLegalMoves();
+        updateAllLegalPlies();
     }
 
-    private Board(Board other) {
+    private Board(Board other, boolean isVirtualBoard) {
         this.EP = other.EP;
 
-        this.enPassant = null;
+        this.enPassant = isVirtualBoard ?
+                null : Square.copy(other.enPassant);
+
         this.whiteShortCastleRight = other.whiteShortCastleRight;
         this.whiteLongCastleRight = other.whiteLongCastleRight;
         this.blackShortCastleRight = other.blackShortCastleRight;
@@ -118,10 +120,11 @@ public class Board implements Position {
 
         this.allLegalPlies = other.allLegalPlies;
 
-        this.fiftyMovePlyCounter = Integer.MIN_VALUE;
-        positionRepetitionCounter = null;
+        this.fiftyMovePlyCounter = isVirtualBoard ?
+                Integer.MIN_VALUE : other.fiftyMovePlyCounter;
+//        positionRepetitionCounter = null;
 
-        isRealBoard = false;
+        this.isVirtualBoard = isVirtualBoard;
     }
 
     private static void copyPieceArray(Board from, Board to) {
@@ -276,15 +279,15 @@ public class Board implements Position {
 
         isWhiteTurn = !isWhiteTurn;
 
-        if (isRealBoard) {
-            updateAllLegalMoves();
+        if (!isVirtualBoard) {
+            updateAllLegalPlies();
 
             if (isFiftyMoveBreaker)
                 fiftyMovePlyCounter = 0;
             else
                 fiftyMovePlyCounter++;
 
-            positionRepetitionCounter.put(this, getPositionRepetitions() + 1);
+//            positionRepetitionCounter.put(this, getPositionRepetitions() + 1);
         }
     }
 
@@ -325,15 +328,20 @@ public class Board implements Position {
         board[from.rank][from.file] = EP;
     }
 
-    private int getPositionRepetitions() {
-        if (positionRepetitionCounter.containsKey(this))
-            return positionRepetitionCounter.get(this);
-        return 0;
-    }
+//    private int getPositionRepetitions() {
+//        if (positionRepetitionCounter.containsKey(this))
+//            return positionRepetitionCounter.get(this);
+//        return 0;
+//    }
 
     @Override
     public boolean isPawn(Square square) {
         return get(square) instanceof Pawn;
+    }
+
+    @Override
+    public Piece.PieceType getPieceType(int rank, int file) {
+        return board[rank][file].pieceType;
     }
 
     public Piece get(Square square) {
@@ -359,11 +367,11 @@ public class Board implements Position {
     }
 
     public boolean isLegal(Ply ply) {
-        Board copy = new Board(this);
+        Board copy = new Board(this, true);
         return copy._isLegal(ply);
     }
 
-    private void updateAllLegalMoves() {
+    private void updateAllLegalPlies() {
         List<Ply> moves = new ArrayList<>();
         for (Ply ply : getAllMoves(isWhiteTurn)) {
             if (isLegal(ply))
@@ -412,6 +420,11 @@ public class Board implements Position {
                 if (!this.board[rank][file].equals(other.board[rank][file]))
                     return false;
         return true;
+    }
+
+    @Override
+    public Board clone(){
+        return new Board(this, false);
     }
 
     @Override

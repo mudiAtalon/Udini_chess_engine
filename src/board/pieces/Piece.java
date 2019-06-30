@@ -12,18 +12,24 @@ public abstract class Piece {
     public final PieceType pieceType;
 
     public enum PieceType{
-        WHITE_KING('\u2654'), BLACK_KING('\u265a'),
-        WHITE_QUEEN('\u2655'), BLACK_QUEEN('\u265b'),
-        WHITE_ROOK('\u2656'), BLACK_ROOK('\u265c'),
-        WHITE_BISHOP('\u2657'), BLACK_BISHOP('\u265d'),
-        WHITE_KNIGHT('\u2658'), BLACK_KNIGHT('\u265e'),
-        WHITE_PAWN('\u2659'), BLACK_PAWN('\u265f'),
-        EMPTY_PIECE('\u2001');
+        WHITE_KING('\u2654', 0), BLACK_KING('\u265a', 0),
+        WHITE_QUEEN('\u2655', 9), BLACK_QUEEN('\u265b', -9),
+        WHITE_ROOK('\u2656', 5), BLACK_ROOK('\u265c', -5),
+        WHITE_BISHOP('\u2657', 3.25), BLACK_BISHOP('\u265d', -3.25),
+        WHITE_KNIGHT('\u2658', 3), BLACK_KNIGHT('\u265e', -3),
+        WHITE_PAWN('\u2659', 1), BLACK_PAWN('\u265f', -1),
+        EMPTY_PIECE('\u2001', 0);
 
         final char c;
+        final double value;
 
-        PieceType(char c){
+        PieceType(char c, double value){
             this.c=c;
+            this.value = value;
+        }
+
+        public double getValue(){
+            return value;
         }
 
         @Override
